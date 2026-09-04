@@ -1,18 +1,9 @@
 name: Publish chronik snapshots
 
-# BY HAND UNTIL THE CREDENTIALS EXIST, and the `push:` trigger is commented out rather than
-# deleted so that restoring it is one line and obviously the intended end state.
-#
-# `REPOSILITE_USER` / `REPOSILITE_SECRET` are not set in this repository's settings, so every push
-# to main ended in `401 Unauthorized` on the first upload — the build itself was fine, it got as far
-# as PUT. A job that fails on every push is not a warning anybody reads: it is how a red default
-# branch becomes the normal state, and then the green checks beside it stop being read too.
-#
-# Restore the trigger in the same commit that adds the secrets, not before.
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [ main ]
+  push:
+    branches: [ main ]
 
 jobs:
   publish:
