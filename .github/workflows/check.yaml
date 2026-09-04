@@ -111,6 +111,35 @@ jobs:
       - if: failure()
         run: cat /tmp/chronik-worker-*.log || true
 
+  # The aimed mutation run, weekly rather than per push.
+  #
+  # It runs the suite once per mutant, so it is minutes rather than seconds — but the cadence is
+  # chosen for what it guards against, not for the cost. A mutant survives when a test has been
+  # weakened, and that happens inside a pull request whose own tests are green: nothing about it
+  # looks wrong on the day. A weekly verdict finds it; a per-push one would mostly re-prove the same
+  # eleven facts and teach people to skip a slow job.
+  #
+  # It DOES block, unlike the anchors below, because a survivor is a statement about this repository
+  # and nobody else's: the boundary of time is unguarded, and no refactor elsewhere can cause that.
+  mutants:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: make mutants
+
   # Separate from the gate, and on a schedule rather than on a pull request, because an anchor rots
   # when somebody refactors a **different** repository. A pull request here is the least likely
   # moment for one to break, and running it there trains people to ignore a red build they did not

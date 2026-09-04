@@ -6,11 +6,12 @@
 
 PY ?= python3
 
-.PHONY: check gate report fix stand help
+.PHONY: check gate report fix stand mutants help
 
 help:
 	@echo "make check   - the gate: blocking checks, exactly what CI runs"
 	@echo "make stand   - the handover stand: kills a worker holding a timer (needs docker)"
+	@echo "make mutants - aimed mutation run over the boundary of time (needs docker)"
 	@echo "make report  - non-blocking reports: BDD coverage, code anchors"
 	@echo "make fix     - regenerate the backlog index, fill in missing coverage-map lines"
 
@@ -58,3 +59,11 @@ fix:
 # stops being green nobody has to notice by accident.
 stand:
 	./dev/check-handover.sh
+
+# Outside the gate for the same reasons as `stand`, and one more: it runs the test suite once per
+# mutant, so it is minutes rather than seconds. CI runs it on a schedule instead of on every push —
+# what it guards against is a test being weakened, and that happens in a pull request whose own
+# tests are green, so a weekly verdict catches it while a per-push one would mostly re-prove the
+# same eleven facts.
+mutants:
+	$(PY) dev/mutants.py
