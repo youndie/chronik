@@ -22,3 +22,7 @@ dependencyResolutionManagement {
 // The primitive: the three operations, the contracts of storage and of the sink, the worker.
 // Knows no SQL and executes nobody's code — only the fact "it is time" leaves it.
 include(":chronik-core")
+
+// The only module that knows SQL. Owns the table, the selection and the lease; ships no DDL and no
+// driver, because choosing those is the application's decision.
+include(":chronik-postgres")

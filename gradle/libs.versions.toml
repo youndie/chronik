@@ -2,6 +2,10 @@
 kotlin = "2.4.10"
 exposed = "1.4.0"
 kotlinx-coroutines = "1.11.0"
+# Pinned to a major rather than latest: a test stand that silently changes its DBMS version
+# answers a different question every few months.
+postgres-driver = "42.7.13"
+testcontainers = "2.0.5"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -9,6 +13,9 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
+
+postgres-driver = { module = "org.postgresql:postgresql", version.ref = "postgres-driver" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

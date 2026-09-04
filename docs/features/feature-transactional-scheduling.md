@@ -51,6 +51,7 @@ tags: [semantics, durability]
 | chronik-core | `chronik-core/src/commonMain/kotlin/Chronik.kt` — конструктор, который слабее не принимает |
 | chronik-core | `chronik-core/src/commonTest/kotlin/OracleTest.kt` — откат забирает таймер |
 | chronik-postgres | `chronik-postgres/src/main/kotlin/ExposedTimerStore.kt` — реализация |
+| chronik-postgres | `chronik-postgres/src/test/kotlin/ExposedTimerStoreTest.kt` — откат и коммит на настоящем Postgres |
 
 Образец, проверенный в бою:
 
@@ -68,7 +69,7 @@ tags: [semantics, durability]
 * **When:** транзакция откатывается
 * **Then:** таймера `t1` в хранилище нет
 * **And:** после `at` событий нет
-* **Automated:** `OracleTest`
+* **Automated:** `OracleTest` (модель), `ExposedTimerStoreTest` (настоящая транзакция Postgres)
 
 ### Scenario: коммит фиксирует обе записи
 
@@ -76,7 +77,7 @@ tags: [semantics, durability]
 * **When:** транзакция коммитится
 * **Then:** бизнес-запись и строка таймера видны одновременно
 * **And:** до коммита воркер таймера не видит
-* **Automated:** `ChronikOperationsTest`
+* **Automated:** `ChronikOperationsTest` (модель), `ExposedTimerStoreTest` (Postgres)
 
 ### Scenario: хранилище без транзакционного контракта отвергается
 

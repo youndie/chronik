@@ -52,6 +52,7 @@ tags: [durability, observability]
 | chronik-core | `chronik-core/src/commonMain/kotlin/TimerWorker.kt` — воркер, `tick()` отдельно от `start(scope)` |
 | chronik-core | `chronik-core/src/commonTest/kotlin/ObservabilityTest.kt` — опоздание, проигранная гонка, провал доставки |
 | chronik-postgres | `chronik-postgres/src/main/kotlin/ExposedTimerStore.kt` — выборка и аренда |
+| chronik-postgres | `chronik-postgres/src/test/kotlin/SkipLockedTest.kt` — `SKIP LOCKED` при двух открытых транзакциях |
 | стенд | `dev/check-handover.sh`, `dev/docker-compose.yml` — SIGKILL со взятой арендой |
 
 Проверенные образцы:
@@ -72,7 +73,8 @@ tags: [durability, observability]
 * **When:** оба делают проход одновременно
 * **Then:** событие выходит один раз
 * **And:** проигравший инстанс сообщает о проигрыше наружу
-* **Automated:** `ObservabilityTest` — на модели; настоящую гонку двух соединений даёт только B-08
+* **Automated:** `ObservabilityTest` (проигрыш, на модели), `ExposedTimerStoreTest` (аренда на
+  настоящем Postgres), `SkipLockedTest` (шаг через занятую строку вместо ожидания)
 
 ### Scenario: убитый со взятой арендой отдаёт таймер
 
