@@ -22,28 +22,43 @@ class InMemoryTimerStore : TransactionalTimerStore {
 
     fun begin(): InMemoryTransaction = InMemoryTransaction()
 
+    /**
+     * An overlay rather than a list of deferred writes, and the difference is not cosmetic.
+     *
+     * Buffered writes gave the transaction no view of itself: `cancel` then `reschedule` on one id
+     * in one transaction both answered "true", and the second then quietly did nothing at commit,
+     * because by then the row was no longer PENDING. A SQL store cannot behave that way — its
+     * `UPDATE ... WHERE state = 'PENDING'` runs inside the transaction, sees the cancel, and
+     * reports nought rows — so the model was blessing an answer the real backend will not give,
+     * and the oracle runs on the model.
+     *
+     * Reads made THROUGH the transaction consult the overlay; the worker reads the committed map
+     * directly and therefore never sees uncommitted rows. That is the isolation a real store has.
+     */
     inner class InMemoryTransaction : TimerTransaction {
-        private val writes = mutableListOf<() -> Unit>()
+        private val overlay = mutableMapOf<String, Timer>()
 
-        internal fun stage(write: () -> Unit) {
-            writes += write
+        internal fun read(id: String): Timer? = overlay[id] ?: timers[id]
+
+        internal fun write(timer: Timer) {
+            overlay[timer.id] = timer
         }
 
         /** What the caller's commit does: both their change and ours become visible together. */
         fun commit() {
-            writes.forEach { it() }
-            writes.clear()
+            timers.putAll(overlay)
+            overlay.clear()
         }
 
         /** A rollback takes the timer with it — nothing here was applied. */
-        fun rollback() = writes.clear()
+        fun rollback() = overlay.clear()
     }
 
     override suspend fun insert(
         tx: TimerTransaction,
         timer: Timer,
     ) {
-        (tx as InMemoryTransaction).stage { timers[timer.id] = timer }
+        (tx as InMemoryTransaction).write(timer)
     }
 
     override suspend fun reschedule(
@@ -51,15 +66,12 @@ class InMemoryTimerStore : TransactionalTimerStore {
         id: String,
         dueAt: EpochSeconds,
     ): Boolean {
-        val existing = timers[id] ?: return false
+        val transaction = tx as InMemoryTransaction
+        val existing = transaction.read(id) ?: return false
         if (existing.state != TimerState.PENDING) return false
-        (tx as InMemoryTransaction).stage {
-            timers[id]?.takeIf { it.state == TimerState.PENDING }?.let {
-                // The lease goes with the due time. A timer moved into the future is not held by
-                // whoever claimed it for the old one.
-                timers[id] = it.copy(dueAt = dueAt, lockedUntil = null, lockedBy = null)
-            }
-        }
+        // The lease goes with the due time. A timer moved into the future is not held by whoever
+        // claimed it for the old one.
+        transaction.write(existing.copy(dueAt = dueAt, lockedUntil = null, lockedBy = null))
         return true
     }
 
@@ -67,13 +79,10 @@ class InMemoryTimerStore : TransactionalTimerStore {
         tx: TimerTransaction,
         id: String,
     ): Boolean {
-        val existing = timers[id] ?: return false
+        val transaction = tx as InMemoryTransaction
+        val existing = transaction.read(id) ?: return false
         if (existing.state != TimerState.PENDING) return false
-        (tx as InMemoryTransaction).stage {
-            timers[id]?.takeIf { it.state == TimerState.PENDING }?.let {
-                timers[id] = it.copy(state = TimerState.CANCELLED)
-            }
-        }
+        transaction.write(existing.copy(state = TimerState.CANCELLED))
         return true
     }
 

@@ -64,6 +64,7 @@ HTTP-поверхности.
 | chronik-core | `chronik-core/src/commonMain/kotlin/Chronik.kt` — три операции, отказ на нетранзакционном хранилище |
 | chronik-core | `chronik-core/src/commonMain/kotlin/TimerWorker.kt` — проход, аренда, опоздание |
 | chronik-core | `chronik-core/src/commonTest/kotlin/OracleTest.kt` — инвариант на 1200 последовательностях |
+| chronik-core | `chronik-core/src/commonTest/kotlin/ChronikOperationsTest.kt` — исходы операций поимённо |
 | chronik-core | `chronik-core/src/commonTest/kotlin/TimerBoundaryTest.kt` — граница срока и аренды |
 | chronik-postgres | `chronik-postgres/src/main/kotlin/TimersTable.kt` — колонки и индексы (ещё нет) |
 
@@ -110,13 +111,16 @@ HTTP-поверхности.
 * **When:** вызван `reschedule("t1", at2)`, где `at2 > at1`
 * **Then:** в момент `at1` событий нет
 * **And:** в момент `at2` выходит **ровно одно** событие
+* **Automated:** `OracleTest`
 
 ### Scenario: отмена несуществующего id
 
 * **Given:** таймера с id `nope` нет
 * **When:** вызван `cancel("nope")`
-* **Then:** наблюдаемый исход документирован и одинаков при повторе — не исключение в одном случае
-  и молчание в другом
+* **Then:** возвращается `false`, ничего не создаётся и не бросается
+* **And:** то же для `reschedule` — и в частности он никогда не является замаскированной вставкой:
+  продление срока у отменённого таймера не должно возвращать его к жизни
+* **Automated:** `ChronikOperationsTest`
 
 ### Scenario: одно и то же множество при любом чередовании операций
 
