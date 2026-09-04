@@ -33,15 +33,30 @@ class ExposedTimerStoreTest {
             val store = store("t_rollback")
             val chronik = Chronik(store, clockAt(0))
 
-            runCatching {
-                transaction(db) {
-                    kotlinx.coroutines.runBlocking {
-                        chronik.schedule(asTimerTransaction(), "t1", EpochSeconds(10), "{}")
+            // Recorded inside, asserted outside. `runCatching` swallows the deliberate failure
+            // below, and it would swallow a failed write just as happily — leaving a test that
+            // passes because the timer was never there to survive. Found by a lint rule that
+            // objects to a discarded Result, which is the same defect this comment is about.
+            var writtenInside = -1
+
+            @Suppress("SwallowedResult") // the throw IS the mechanism: it abandons the transaction
+            val ignored =
+                runCatching {
+                    transaction(db) {
+                        kotlinx.coroutines.runBlocking {
+                            chronik.schedule(asTimerTransaction(), "t1", EpochSeconds(10), "{}")
+                        }
+                        writtenInside =
+                            exec("SELECT count(*) FROM t_rollback WHERE id = 't1'") { rs ->
+                                rs.next()
+                                rs.getInt(1)
+                            } ?: -1
+                        // The caller's own failure, after the timer was written and before the commit.
+                        error("the business step refused")
                     }
-                    // The caller's own failure, after the timer was written and before the commit.
-                    error("the business step refused")
                 }
-            }
+
+            assertEquals(1, writtenInside, "the timer was never written, so its absence proves nothing")
 
             assertNull(store.findById("t1"), "the rollback had to take the timer with it")
         }

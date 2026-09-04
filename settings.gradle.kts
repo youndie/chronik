@@ -21,7 +21,7 @@ plugins {
     // Taking these rather than hand-rolling was decided by finding, an hour after writing one by
     // hand, that the shared version already carried the same defect and its fix: a `kotlin("jvm")`
     // module whose publish task reports success and uploads nothing.
-    id("ru.workinprogress.sborka.settings") version "0.1.0.4"
+    id("ru.workinprogress.sborka.settings") version "0.2.0.29"
 }
 
 // The primitive: the three operations, the contracts of storage and of the sink, the worker.

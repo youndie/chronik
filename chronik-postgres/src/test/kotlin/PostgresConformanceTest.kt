@@ -29,14 +29,20 @@ class PostgresConformanceTest {
             }
 
             override suspend fun rolledBack(body: suspend (TimerTransaction) -> Unit) {
-                runCatching {
-                    transaction(db) {
-                        runBlocking { body(asTimerTransaction()) }
-                        // A real abandonment rather than a flag: the caller's own step refused, and
-                        // that is the shape chronik has to survive.
-                        error("the caller's step refused")
+                // The throw IS the mechanism here, and nothing else runs inside: the corpus case
+                // that uses this is itself proven able to fail, by a subject that commits what it
+                // was asked to abandon (KitCatchesViolationsTest). That guard is why this one does
+                // not need to record anything.
+                @Suppress("SwallowedResult")
+                val ignored =
+                    runCatching {
+                        transaction(db) {
+                            runBlocking { body(asTimerTransaction()) }
+                            // A real abandonment rather than a flag: the caller's own step refused, and
+                            // that is the shape chronik has to survive.
+                            error("the caller's step refused")
+                        }
                     }
-                }
             }
 
             override suspend fun reset() {

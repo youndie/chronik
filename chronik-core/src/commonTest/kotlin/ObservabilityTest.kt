@@ -190,4 +190,83 @@ class ObservabilityTest {
             assertTrue(store.findById("good")?.state == TimerState.FIRED)
             assertFalse(store.findById("bad")?.state == TimerState.FIRED)
         }
+
+    /**
+     * A storage that refuses every pass is reported, not swallowed.
+     *
+     * The worker surviving this is deliberate — an unfired timer is not going anywhere. But
+     * surviving is not the same as being invisible: a worker whose storage has been refusing for an
+     * hour looks exactly like an idle one from outside, and that is the only state in which this
+     * library is quietly doing nothing at all.
+     */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @Test
+    fun `a storage failure during a pass is reported rather than swallowed`() =
+        runTest {
+            val refusing =
+                object : TimerStore by InMemoryTimerStore() {
+                    override suspend fun claimDue(
+                        now: EpochSeconds,
+                        leaseUntil: EpochSeconds,
+                        owner: String,
+                        limit: Int,
+                    ): List<Timer> = error("the database is gone")
+                }
+
+            val failures = mutableListOf<Pair<String, String>>()
+            val worker =
+                TimerWorker(
+                    refusing,
+                    RecordingSink(),
+                    TestClock(),
+                    owner = "w",
+                    onWorkerFailure = { stage, cause -> failures += stage to (cause.message ?: "") },
+                )
+
+            // Through start(), because tick() lets the exception out and it is the LOOP that
+            // swallows it — testing tick() would prove nothing about the thing being fixed.
+            val job = worker.start(this)
+            testScheduler.advanceTimeBy(2_500)
+            job.cancel()
+
+            assertTrue(failures.isNotEmpty(), "the storage refused every pass and nobody was told")
+            assertEquals("poll", failures.first().first)
+            assertEquals("the database is gone", failures.first().second)
+        }
+
+    @Test
+    fun `a failure to record a firing is reported, since it explains a duplicate`() =
+        runTest {
+            val store = InMemoryTimerStore()
+            val clock = TestClock()
+            val chronik = Chronik(store, clock)
+
+            val tx = store.begin()
+            chronik.schedule(tx, "t1", EpochSeconds(10), "{}")
+            tx.commit()
+
+            val refusingMark =
+                object : TimerStore by store {
+                    override suspend fun markFired(id: String) = error("the update failed")
+                }
+
+            val failures = mutableListOf<String>()
+            val sink = RecordingSink()
+            val worker =
+                TimerWorker(
+                    refusingMark,
+                    sink,
+                    clock,
+                    owner = "w",
+                    onWorkerFailure = { stage, _ -> failures += stage },
+                )
+
+            clock.advanceTo(10)
+            worker.tick()
+
+            // The event went out; only recording it failed. Both facts matter, and the second is
+            // the one that explains the duplicate the next pass will produce.
+            assertEquals(listOf("t1"), sink.delivered.map { it.id })
+            assertEquals(listOf("mark-fired:t1"), failures)
+        }
 }

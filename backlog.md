@@ -38,13 +38,11 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (1)
+## Open (0)
 
-| Task | | Priority | Size | Blocked by |
-|---|---|---|---|---|
-| [B-15](docs/backlog/B-15-sborka-bump-for-pom-url.md) `[ ]` | Поднять версию общих конвенций: в POM неразрешённый Gradle-провайдер | P3 | XS | - |
+No open tasks.
 
-## Closed (14)
+## Closed (15)
 
 **Обещания и оракул**
 
@@ -69,6 +67,7 @@
 - [B-09](docs/backlog/B-09-lag-measurement.md) `[x]` - Замер: опоздание p50/p95 и деградация скана без индекса по due_at
 - [B-12](docs/backlog/B-12-conformance-kit.md) `[x]` - Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом
 - [B-14](docs/backlog/B-14-publish-and-sborka-bump.md) `[x]` - Публикация: workflow заведён, координата ждёт удалённого репозитория
+- [B-15](docs/backlog/B-15-sborka-bump-for-pom-url.md) `[x]` - Поднять версию общих конвенций: в POM неразрешённый Gradle-провайдер
 
 **Потребители**
 

@@ -76,6 +76,18 @@ public class TimerWorker(
      */
     private val onDeadLettered: (id: String, attempts: Int) -> Unit = { _, _ -> },
     /**
+     * Something failed that is not one timer's delivery: the storage refused a pass, or recording
+     * an outcome did not go through.
+     *
+     * These used to be swallowed with a `TODO: log this`. The worker survives them by design — an
+     * unfired timer is not going anywhere — but surviving is not the same as being invisible: a
+     * worker whose storage has been refusing every pass for an hour looks EXACTLY like an idle one
+     * from outside, and that is the only state where this library is silently doing nothing.
+     *
+     * chronik has no logger of its own and will not grow one; whoever wires it up has one.
+     */
+    private val onWorkerFailure: (stage: String, cause: Throwable) -> Unit = { _, _ -> },
+    /**
      * A pass that claimed nothing while timers were due — this worker lost the race to another.
      *
      * Reported because a lease whose losers are invisible cannot be told from a lease that never
@@ -96,8 +108,9 @@ public class TimerWorker(
                     throw e
                 } catch (e: Exception) {
                     // A transient storage failure, not a failure of any one timer; the next pass
-                    // tries again.
-                    // TODO: log this
+                    // tries again — and somebody is told, because a worker that has been failing
+                    // every pass looks idle from outside.
+                    onWorkerFailure("poll", e)
                 }
                 delay(pollInterval)
             }
@@ -154,8 +167,9 @@ public class TimerWorker(
                 // The event went out and recording it did not. The lease lapses and another pass
                 // delivers it again — which is exactly what at-least-once means and why the
                 // receiver must deduplicate on the key in the payload. Losing the timer here would
-                // be the worse trade.
-                // TODO: log this
+                // be the worse trade, and staying quiet about it would hide a duplicate that has
+                // an explanation.
+                onWorkerFailure("mark-fired:${timer.id}", e)
             }
         }
         return fired
@@ -179,7 +193,8 @@ public class TimerWorker(
         } catch (e: Exception) {
             // Recording the failure failed too. The timer keeps the lease it already has and comes
             // back when that lapses, so nothing is lost — only the backoff for this one attempt.
-            // TODO: log this, and `cause` with it
+            // Both causes go out: the delivery's and this one's, or the second hides the first.
+            onWorkerFailure("record-failure:${timer.id}:${cause::class.simpleName}", e)
         }
     }
 
