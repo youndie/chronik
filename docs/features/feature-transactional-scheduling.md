@@ -47,7 +47,9 @@ tags: [semantics, durability]
 
 | Модуль | Код |
 |---|---|
-| chronik-core | `chronik-core/src/commonMain/kotlin/` — контракт хранилища, принимающий транзакцию |
+| chronik-core | `chronik-core/src/commonMain/kotlin/TimerStore.kt` — `TransactionalTimerStore`, отдельным интерфейсом |
+| chronik-core | `chronik-core/src/commonMain/kotlin/Chronik.kt` — конструктор, который слабее не принимает |
+| chronik-core | `chronik-core/src/commonTest/kotlin/OracleTest.kt` — откат забирает таймер |
 | chronik-postgres | `chronik-postgres/src/main/kotlin/ExposedTimerStore.kt` — реализация |
 
 Образец, проверенный в бою:
@@ -66,6 +68,7 @@ tags: [semantics, durability]
 * **When:** транзакция откатывается
 * **Then:** таймера `t1` в хранилище нет
 * **And:** после `at` событий нет
+* **Automated:** `OracleTest`
 
 ### Scenario: коммит фиксирует обе записи
 

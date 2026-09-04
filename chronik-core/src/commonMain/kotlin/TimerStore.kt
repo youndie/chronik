@@ -29,6 +29,18 @@ interface TimerStore {
         limit: Int,
     ): List<Timer>
 
+    /**
+     * Is anything due and unclaimed right now?
+     *
+     * Exists for one question a worker cannot otherwise answer: it claimed nothing — was there
+     * nothing to do, or did another instance get there first? Those two look identical from here
+     * and mean opposite things about whether the lease is working at all.
+     *
+     * Called only by a worker that was given a lost-race handler, because on a busy store this is
+     * a query per idle pass.
+     */
+    suspend fun hasDue(now: EpochSeconds): Boolean
+
     suspend fun markFired(id: String)
 
     suspend fun markFailed(id: String)
