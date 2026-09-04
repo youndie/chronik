@@ -30,11 +30,14 @@ interface TimerStore {
     ): List<Timer>
 
     /**
-     * Is anything due and unclaimed right now?
+     * Is any timer past its due time and not yet terminal — REGARDLESS of who holds it?
      *
-     * Exists for one question a worker cannot otherwise answer: it claimed nothing — was there
-     * nothing to do, or did another instance get there first? Those two look identical from here
-     * and mean opposite things about whether the lease is working at all.
+     * "Regardless of who holds it" is the whole definition, and getting it wrong makes the method
+     * useless in the one case it exists for. It answers a question a worker cannot otherwise
+     * answer: it claimed nothing — was there nothing to do, or did another instance get there
+     * first? A worker that has just lost the race is looking at rows that ARE claimed, so a
+     * predicate reading "due and unclaimed" answers "nothing due" to the loser and reports no loss.
+     * That was the first shape of this method, and the test for the loser is what said so.
      *
      * Called only by a worker that was given a lost-race handler, because on a busy store this is
      * a query per idle pass.

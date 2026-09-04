@@ -88,7 +88,10 @@ class InMemoryTimerStore : TransactionalTimerStore {
 
     override suspend fun findById(id: String): Timer? = timers[id]
 
-    override suspend fun hasDue(now: EpochSeconds): Boolean = timers.values.any { it.isClaimableAt(now) }
+    // Deliberately NOT isClaimableAt: the lease is exactly what this must look past, or the worker
+    // that just lost the race is told there was nothing to lose.
+    override suspend fun hasDue(now: EpochSeconds): Boolean =
+        timers.values.any { it.state == TimerState.PENDING && it.dueAt <= now }
 
     override suspend fun claimDue(
         now: EpochSeconds,

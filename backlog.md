@@ -38,13 +38,12 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (9)
+## Open (8)
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
-| [B-05](docs/backlog/B-05-postgres-backend.md) `[ ]` | Бэкенд Postgres: выборка SKIP LOCKED и аренда колонкой | P0 | L | B-03 |
+| [B-05](docs/backlog/B-05-postgres-backend.md) `[?]` | Бэкенд Postgres: выборка SKIP LOCKED и аренда колонкой | P0 | L | B-03 |
 | [B-08](docs/backlog/B-08-kill-harness.md) `[ ]` | Стенд: убить воркера со взятой арендой и увидеть, что таймер ушёл другому | P0 | M | B-05 |
-| [B-04](docs/backlog/B-04-lateness-metric.md) `[ ]` | Опоздание считается и выходит наружу, а не тонет в логе | P1 | S | B-03 |
 | [B-06](docs/backlog/B-06-delivery-sinks.md) `[ ]` | Доставка: приёмники, backoff и dead letter после N | P1 | M | B-05 |
 | [B-07](docs/backlog/B-07-mutation-run-on-due.md) `[ ]` | Мутационный прогон по выборке «что пора» и по проверке аренды | P1 | M | B-05 |
 | [B-09](docs/backlog/B-09-lag-measurement.md) `[ ]` | Замер: опоздание p50/p95 и деградация скана без индекса по due_at | P1 | M | B-05, B-04 |
@@ -52,7 +51,7 @@
 | [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05, B-11 |
 | [B-12](docs/backlog/B-12-conformance-kit.md) `[ ]` | Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом | P2 | M | B-05 |
 
-## Closed (4)
+## Closed (5)
 
 **Обещания и оракул**
 
@@ -62,6 +61,7 @@
 **Ядро**
 
 - [B-03](docs/backlog/B-03-core-api.md) `[x]` - Ядро: schedule / cancel / reschedule и запись в чужую транзакцию
+- [B-04](docs/backlog/B-04-lateness-metric.md) `[x]` - Опоздание считается и выходит наружу, а не тонет в логе
 - [B-13](docs/backlog/B-13-code-gate.md) `[x]` - Гейт покрывает код, а не только документы
 
 <!-- END INDEX -->
