@@ -1,11 +1,8 @@
 plugins {
     kotlin("multiplatform")
-    id("chronik.publishing")
-}
-
-
-repositories {
-    mavenCentral()
+    alias(libs.plugins.sborkaKmp)
+    alias(libs.plugins.sborkaLint)
+    alias(libs.plugins.sborkaPublish)
 }
 
 kotlin {

@@ -6,17 +6,22 @@ pluginManagement {
     repositories {
         mavenCentral()
         gradlePluginPortal()
+        // Written out by hand, and it has to be: `pluginManagement` is evaluated before any settings
+        // plugin is applied — including the sborka one, which is fetched through it.
+        maven("https://reposilite.kotlin.website/snapshots") {
+            name = "wip-snapshots"
+            content { includeGroupByRegex("ru\\.workinprogress.*") }
+        }
     }
 }
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
+    // Repositories with content filters, the shared catalog, and the shared publishing contract.
+    // Taking these rather than hand-rolling was decided by finding, an hour after writing one by
+    // hand, that the shared version already carried the same defect and its fix: a `kotlin("jvm")`
+    // module whose publish task reports success and uploads nothing.
+    id("ru.workinprogress.sborka.settings") version "0.1.0.4"
 }
 
 // The primitive: the three operations, the contracts of storage and of the sink, the worker.

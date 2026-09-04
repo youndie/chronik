@@ -37,7 +37,10 @@ class ObservabilityTest {
             val seen = mutableMapOf<String, Long>()
             val worker =
                 TimerWorker(
-                    store, RecordingSink(), clock, owner = "after-restart",
+                    store,
+                    RecordingSink(),
+                    clock,
+                    owner = "after-restart",
                     onFired = { id, lateness -> seen[id] = lateness },
                 )
 
@@ -139,7 +142,11 @@ class ObservabilityTest {
             val refusingSink = TimerSink { error("the broker is down") }
             val worker =
                 TimerWorker(
-                    store, refusingSink, clock, owner = "w", leaseSeconds = 5,
+                    store,
+                    refusingSink,
+                    clock,
+                    owner = "w",
+                    leaseSeconds = 5,
                     onDeliveryFailed = { id, _ -> failures += id },
                 )
 

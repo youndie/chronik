@@ -183,6 +183,7 @@ class ChronikOperationsTest {
             assertEquals(1, worker.tick())
             assertEquals(60, sink.delivered.single().lateness)
         }
+
     /**
      * Two operations on one id in one transaction: the second sees the first.
      *

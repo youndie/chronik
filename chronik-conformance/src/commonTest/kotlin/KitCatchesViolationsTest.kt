@@ -43,147 +43,217 @@ class KitCatchesViolationsTest {
     private fun violations(): Map<String, (ReferenceStore) -> TransactionalTimerStore> =
         mapOf(
             "a committed timer exists and is claimable once it is due" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = emptyList<Timer>()
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = emptyList<Timer>()
+                    }
+                },
             "nothing is claimable before its due second" to
-                { s -> object : TransactionalTimerStore by s {
-                    // The classic off-by-one: due strictly before, so a timer becomes claimable a
-                    // second early.
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.claimDue(EpochSeconds(now.value + 1), leaseUntil, owner, limit)
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // The classic off-by-one: due strictly before, so a timer becomes claimable a
+                        // second early.
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.claimDue(EpochSeconds(now.value + 1), leaseUntil, owner, limit)
+                    }
+                },
             "a live lease hides the timer from everybody else" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.timers.values.filter { it.state == TimerState.PENDING && it.dueAt <= now }
-                        .take(limit)
-                        .map { t ->
-                            val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
-                            s.timers[t.id] = held
-                            held
-                        }
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.timers.values
+                            .filter { it.state == TimerState.PENDING && it.dueAt <= now }
+                            .take(limit)
+                            .map { t ->
+                                val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
+                                s.timers[t.id] = held
+                                held
+                            }
+                    }
+                },
             "a lapsed lease makes the timer claimable again" to
-                { s -> object : TransactionalTimerStore by s {
-                    // A lock rather than a lease: once held, held for ever.
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.timers.values
-                        .filter { it.state == TimerState.PENDING && it.dueAt <= now && it.lockedUntil == null }
-                        .take(limit)
-                        .map { t ->
-                            val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
-                            s.timers[t.id] = held
-                            held
-                        }
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // A lock rather than a lease: once held, held for ever.
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.timers.values
+                            .filter { it.state == TimerState.PENDING && it.dueAt <= now && it.lockedUntil == null }
+                            .take(limit)
+                            .map { t ->
+                                val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
+                                s.timers[t.id] = held
+                                held
+                            }
+                    }
+                },
             "a cancelled timer never fires" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun cancel(tx: TimerTransaction, id: String) = true
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun cancel(
+                            tx: TimerTransaction,
+                            id: String,
+                        ) = true
+                    }
+                },
             "cancel and reschedule report false for a timer that does not exist" to
-                { s -> object : TransactionalTimerStore by s {
-                    // A reschedule that inserts: the shape that quietly resurrects cancelled work.
-                    override suspend fun reschedule(
-                        tx: TimerTransaction, id: String, dueAt: EpochSeconds,
-                    ): Boolean {
-                        if (s.reschedule(tx, id, dueAt)) return true
-                        s.insert(tx, Timer(id = id, dueAt = dueAt, payload = "{}"))
-                        return true
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // A reschedule that inserts: the shape that quietly resurrects cancelled work.
+                        override suspend fun reschedule(
+                            tx: TimerTransaction,
+                            id: String,
+                            dueAt: EpochSeconds,
+                        ): Boolean {
+                            if (s.reschedule(tx, id, dueAt)) return true
+                            s.insert(tx, Timer(id = id, dueAt = dueAt, payload = "{}"))
+                            return true
+                        }
                     }
-                } },
+                },
             "an operation sees an earlier operation in the same transaction" to
-                { s -> object : TransactionalTimerStore by s {
-                    // Reads the committed map instead of the transaction, which is exactly what a
-                    // buffered-writes implementation does.
-                    override suspend fun reschedule(
-                        tx: TimerTransaction, id: String, dueAt: EpochSeconds,
-                    ): Boolean {
-                        val t = s.timers[id] ?: return false
-                        if (t.state != TimerState.PENDING) return false
-                        s.insert(tx, t.copy(dueAt = dueAt, lockedUntil = null, lockedBy = null))
-                        return true
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // Reads the committed map instead of the transaction, which is exactly what a
+                        // buffered-writes implementation does.
+                        override suspend fun reschedule(
+                            tx: TimerTransaction,
+                            id: String,
+                            dueAt: EpochSeconds,
+                        ): Boolean {
+                            val t = s.timers[id] ?: return false
+                            if (t.state != TimerState.PENDING) return false
+                            s.insert(tx, t.copy(dueAt = dueAt, lockedUntil = null, lockedBy = null))
+                            return true
+                        }
                     }
-                } },
+                },
             "a failed delivery counts an attempt and holds the timer until its backoff" to
-                { s -> object : TransactionalTimerStore by s {
-                    // Counts the attempt and forgets the wait: the backoff lives in the worker's
-                    // memory, so no other instance honours it.
-                    override suspend fun markFailed(id: String, retryAfter: EpochSeconds) {
-                        s.timers[id]?.let { s.timers[it.id] = it.copy(attempts = it.attempts + 1, lockedUntil = null) }
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // Counts the attempt and forgets the wait: the backoff lives in the worker's
+                        // memory, so no other instance honours it.
+                        override suspend fun markFailed(
+                            id: String,
+                            retryAfter: EpochSeconds,
+                        ) {
+                            s.timers[id]?.let {
+                                s.timers[it.id] =
+                                    it.copy(attempts = it.attempts + 1, lockedUntil = null)
+                            }
+                        }
                     }
-                } },
+                },
             "a dead lettered timer is never selected again" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun markDeadLettered(id: String) = Unit
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun markDeadLettered(id: String) = Unit
+                    }
+                },
             "hasDue looks past the lease, or the loser of a race is told nothing was due" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun hasDue(now: EpochSeconds) =
-                        s.timers.values.any { it.isClaimableAt(now) }
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun hasDue(now: EpochSeconds) = s.timers.values.any { it.isClaimableAt(now) }
+                    }
+                },
             "claimDue respects its limit and takes the earliest first" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.claimDue(now, leaseUntil, owner, limit).reversed()
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.claimDue(now, leaseUntil, owner, limit).reversed()
+                    }
+                },
             "the lease belongs to the second it expires in" to
-                { s -> object : TransactionalTimerStore by s {
-                    // Off by one on the lease: the second it expires in is treated as free.
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.timers.values
-                        .filter {
-                            it.state == TimerState.PENDING && it.dueAt <= now &&
-                                (it.lockedUntil == null || it.lockedUntil!! <= now)
-                        }
-                        .take(limit)
-                        .map { t ->
-                            val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
-                            s.timers[t.id] = held
-                            held
-                        }
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // Off by one on the lease: the second it expires in is treated as free.
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.timers.values
+                            .filter {
+                                it.state == TimerState.PENDING && it.dueAt <= now &&
+                                    (it.lockedUntil == null || it.lockedUntil!! <= now)
+                            }.take(limit)
+                            .map { t ->
+                                val held = t.copy(lockedUntil = leaseUntil, lockedBy = owner)
+                                s.timers[t.id] = held
+                                held
+                            }
+                    }
+                },
             "cancelling after the due second but before the event still works" to
-                { s -> object : TransactionalTimerStore by s {
-                    // A plausible guard that is wrong: "too late to cancel, it is already due".
-                    // That window is exactly when a compensating saga needs the cancel.
-                    override suspend fun cancel(tx: TimerTransaction, id: String): Boolean {
-                        val t = s.timers[id] ?: return false
-                        if (t.lockedUntil != null || t.dueAt <= EpochSeconds(10)) return false
-                        return s.cancel(tx, id)
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // A plausible guard that is wrong: "too late to cancel, it is already due".
+                        // That window is exactly when a compensating saga needs the cancel.
+                        override suspend fun cancel(
+                            tx: TimerTransaction,
+                            id: String,
+                        ): Boolean {
+                            val t = s.timers[id] ?: return false
+                            if (t.lockedUntil != null || t.dueAt <= EpochSeconds(10)) return false
+                            return s.cancel(tx, id)
+                        }
                     }
-                } },
+                },
             "reschedule moves the existing timer rather than adding a second" to
-                { s -> object : TransactionalTimerStore by s {
-                    // Cancel-and-insert instead of a move: the anti-pattern the API exists to avoid.
-                    override suspend fun reschedule(
-                        tx: TimerTransaction, id: String, dueAt: EpochSeconds,
-                    ): Boolean {
-                        if (!s.cancel(tx, id)) return false
-                        s.insert(tx, Timer(id = "$id-again", dueAt = dueAt, payload = "{}"))
-                        return true
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // Cancel-and-insert instead of a move: the anti-pattern the API exists to avoid.
+                        override suspend fun reschedule(
+                            tx: TimerTransaction,
+                            id: String,
+                            dueAt: EpochSeconds,
+                        ): Boolean {
+                            if (!s.cancel(tx, id)) return false
+                            s.insert(tx, Timer(id = "$id-again", dueAt = dueAt, payload = "{}"))
+                            return true
+                        }
                     }
-                } },
+                },
             "a fired timer is terminal and cannot be reopened" to
-                { s -> object : TransactionalTimerStore by s {
-                    // Records the firing by releasing the lease and leaving the row PENDING.
-                    override suspend fun markFired(id: String) {
-                        s.timers[id]?.let { s.timers[id] = it.copy(lockedUntil = null, lockedBy = null) }
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        // Records the firing by releasing the lease and leaving the row PENDING.
+                        override suspend fun markFired(id: String) {
+                            s.timers[id]?.let { s.timers[id] = it.copy(lockedUntil = null, lockedBy = null) }
+                        }
                     }
-                } },
+                },
             "a claim reports the lease it took, not the one it found" to
-                { s -> object : TransactionalTimerStore by s {
-                    override suspend fun claimDue(
-                        now: EpochSeconds, leaseUntil: EpochSeconds, owner: String, limit: Int,
-                    ) = s.claimDue(now, leaseUntil, owner, limit).map { it.copy(lockedBy = null) }
-                } },
+                { s ->
+                    object : TransactionalTimerStore by s {
+                        override suspend fun claimDue(
+                            now: EpochSeconds,
+                            leaseUntil: EpochSeconds,
+                            owner: String,
+                            limit: Int,
+                        ) = s.claimDue(now, leaseUntil, owner, limit).map { it.copy(lockedBy = null) }
+                    }
+                },
         )
 
     @Test
@@ -249,7 +319,14 @@ class KitCatchesViolationsTest {
                     "been seen to fail is indistinguishable from one that checks nothing.",
             )
         }
-        assertEquals(kit.cases.size, kit.cases.map { it.rule }.toSet().size, "two cases share a rule name")
+        assertEquals(
+            kit.cases.size,
+            kit.cases
+                .map { it.rule }
+                .toSet()
+                .size,
+            "two cases share a rule name",
+        )
     }
 
     /**

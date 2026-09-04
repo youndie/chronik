@@ -60,7 +60,13 @@ class ConformanceKit {
                 val claimed = s.store.claimDue(at(10), at(40), "w", 10)
                 when {
                     s.store.findById("t1") == null -> "the timer is not in storage after its transaction committed"
-                    claimed.map { it.id } != listOf("t1") -> "claimDue at the due second returned ${claimed.map { it.id }}"
+
+                    claimed.map { it.id } !=
+                        listOf(
+                            "t1",
+                        )
+                    -> "claimDue at the due second returned ${claimed.map { it.id }}"
+
                     else -> null
                 }
             },
@@ -103,10 +109,17 @@ class ConformanceKit {
                 s.committed { tx -> s.store.insert(tx, timer("t1", due = 10)) }
                 s.committed { tx -> s.store.cancel(tx, "t1") }
                 when {
-                    s.store.claimDue(at(10_000), at(10_030), "w", 10).isNotEmpty() ->
+                    s.store.claimDue(at(10_000), at(10_030), "w", 10).isNotEmpty() -> {
                         "a cancelled timer was claimed"
-                    s.store.hasDue(at(10_000)) -> "a cancelled timer still counts as due"
-                    else -> null
+                    }
+
+                    s.store.hasDue(at(10_000)) -> {
+                        "a cancelled timer still counts as due"
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
             },
             case("cancelling after the due second but before the event still works") { s ->
@@ -140,7 +153,13 @@ class ConformanceKit {
                 val atNewTime = s.store.claimDue(at(100), at(130), "w", 10)
                 when {
                     atOldTime.isNotEmpty() -> "the timer was still claimable at its old due second"
-                    atNewTime.map { it.id } != listOf("t1") -> "at the new due second the claim returned ${atNewTime.map { it.id }}"
+
+                    atNewTime.map { it.id } !=
+                        listOf(
+                            "t1",
+                        )
+                    -> "at the new due second the claim returned ${atNewTime.map { it.id }}"
+
                     else -> null
                 }
             },
@@ -164,23 +183,42 @@ class ConformanceKit {
                 s.store.markFailed("t1", at(60))
                 val stored = s.store.findById("t1")
                 when {
-                    stored?.attempts != 1 -> "attempts is ${stored?.attempts} after one failure"
-                    stored.state != TimerState.PENDING -> "a failed delivery left the timer ${stored.state}"
-                    s.store.claimDue(at(30), at(60), "other", 10).isNotEmpty() ->
+                    stored?.attempts != 1 -> {
+                        "attempts is ${stored?.attempts} after one failure"
+                    }
+
+                    stored.state != TimerState.PENDING -> {
+                        "a failed delivery left the timer ${stored.state}"
+                    }
+
+                    s.store.claimDue(at(30), at(60), "other", 10).isNotEmpty() -> {
                         "another worker claimed the timer inside its backoff; the wait is not in the row"
-                    s.store.claimDue(at(61), at(91), "other", 10).isEmpty() ->
+                    }
+
+                    s.store.claimDue(at(61), at(91), "other", 10).isEmpty() -> {
                         "the timer stayed held after its backoff expired"
-                    else -> null
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
             },
             case("a dead lettered timer is never selected again") { s ->
                 s.committed { tx -> s.store.insert(tx, timer("t1", due = 10)) }
                 s.store.markDeadLettered("t1")
                 when {
-                    s.store.claimDue(at(10_000), at(10_030), "w", 10).isNotEmpty() ->
+                    s.store.claimDue(at(10_000), at(10_030), "w", 10).isNotEmpty() -> {
                         "a dead lettered timer was claimed"
-                    s.store.hasDue(at(10_000)) -> "a dead lettered timer still counts as due"
-                    else -> null
+                    }
+
+                    s.store.hasDue(at(10_000)) -> {
+                        "a dead lettered timer still counts as due"
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
             },
             case("a fired timer is terminal and cannot be reopened") { s ->
@@ -213,10 +251,17 @@ class ConformanceKit {
                 }
                 val claimed = s.store.claimDue(at(100), at(130), "w", 2)
                 when {
-                    claimed.size != 2 -> "a limit of 2 returned ${claimed.size} timers"
-                    claimed.map { it.id } != listOf("early", "middle") ->
+                    claimed.size != 2 -> {
+                        "a limit of 2 returned ${claimed.size} timers"
+                    }
+
+                    claimed.map { it.id } != listOf("early", "middle") -> {
                         "the claim returned ${claimed.map { it.id }}; the earliest due must go first"
-                    else -> null
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
             },
             case("a claim reports the lease it took, not the one it found") { s ->

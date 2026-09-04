@@ -3,9 +3,6 @@ plugins {
     application
 }
 
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     implementation(project(":chronik-core"))

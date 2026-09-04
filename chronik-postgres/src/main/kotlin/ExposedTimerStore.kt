@@ -129,7 +129,11 @@ class ExposedTimerStore(
 
     override suspend fun findById(id: String): Timer? =
         dbQuery {
-            table.selectAll().where { table.id eq id }.singleOrNull()?.toDomain()
+            table
+                .selectAll()
+                .where { table.id eq id }
+                .singleOrNull()
+                ?.toDomain()
         }
 
     override suspend fun hasDue(now: EpochSeconds): Boolean =

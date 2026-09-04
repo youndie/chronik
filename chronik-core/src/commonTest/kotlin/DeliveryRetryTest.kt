@@ -46,8 +46,13 @@ class DeliveryRetryTest {
             val sink = CountingSink(failuresBeforeSuccess = 1)
             val worker =
                 TimerWorker(
-                    store, sink, clock, owner = "w",
-                    leaseSeconds = 30, baseBackoffSeconds = 4, maxBackoffSeconds = 60,
+                    store,
+                    sink,
+                    clock,
+                    owner = "w",
+                    leaseSeconds = 30,
+                    baseBackoffSeconds = 4,
+                    maxBackoffSeconds = 60,
                 )
 
             clock.advanceTo(10)
@@ -68,8 +73,12 @@ class DeliveryRetryTest {
     fun `the wait between attempts doubles and then stops at the ceiling`() {
         val worker =
             TimerWorker(
-                InMemoryTimerStore(), RecordingSink(), TestClock(), owner = "w",
-                baseBackoffSeconds = 2, maxBackoffSeconds = 20,
+                InMemoryTimerStore(),
+                RecordingSink(),
+                TestClock(),
+                owner = "w",
+                baseBackoffSeconds = 2,
+                maxBackoffSeconds = 20,
             )
 
         assertEquals(listOf(2L, 4L, 8L, 16L, 20L, 20L), (1..6).map { worker.backoffSeconds(it) })
@@ -85,8 +94,12 @@ class DeliveryRetryTest {
     fun `an absurd attempt count still yields the ceiling, not a wrapped-around zero`() {
         val worker =
             TimerWorker(
-                InMemoryTimerStore(), RecordingSink(), TestClock(), owner = "w",
-                baseBackoffSeconds = 1, maxBackoffSeconds = 300,
+                InMemoryTimerStore(),
+                RecordingSink(),
+                TestClock(),
+                owner = "w",
+                baseBackoffSeconds = 1,
+                maxBackoffSeconds = 300,
             )
 
         for (attempt in listOf(60, 64, 65, 100, Int.MAX_VALUE)) {
@@ -105,8 +118,13 @@ class DeliveryRetryTest {
             val deadLettered = mutableListOf<Pair<String, Int>>()
             val worker =
                 TimerWorker(
-                    store, sink, clock, owner = "w",
-                    maxAttempts = 3, baseBackoffSeconds = 1, maxBackoffSeconds = 10,
+                    store,
+                    sink,
+                    clock,
+                    owner = "w",
+                    maxAttempts = 3,
+                    baseBackoffSeconds = 1,
+                    maxBackoffSeconds = 10,
                     onDeadLettered = { id, attempts -> deadLettered += id to attempts },
                 )
 
@@ -139,8 +157,13 @@ class DeliveryRetryTest {
             var deadLettered = 0
             val worker =
                 TimerWorker(
-                    store, sink, clock, owner = "w",
-                    maxAttempts = 3, baseBackoffSeconds = 1, maxBackoffSeconds = 10,
+                    store,
+                    sink,
+                    clock,
+                    owner = "w",
+                    maxAttempts = 3,
+                    baseBackoffSeconds = 1,
+                    maxBackoffSeconds = 10,
                     onDeadLettered = { _, _ -> deadLettered++ },
                 )
 
@@ -174,8 +197,13 @@ class DeliveryRetryTest {
             val failing = CountingSink(failuresBeforeSuccess = Int.MAX_VALUE)
             val first =
                 TimerWorker(
-                    store, failing, clock, owner = "w1",
-                    leaseSeconds = 1, baseBackoffSeconds = 30, maxBackoffSeconds = 60,
+                    store,
+                    failing,
+                    clock,
+                    owner = "w1",
+                    leaseSeconds = 1,
+                    baseBackoffSeconds = 30,
+                    maxBackoffSeconds = 60,
                 )
 
             clock.advanceTo(10)

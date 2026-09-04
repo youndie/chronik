@@ -1,11 +1,8 @@
 plugins {
     kotlin("jvm")
-    id("chronik.publishing")
-}
-
-
-repositories {
-    mavenCentral()
+    alias(libs.plugins.sborkaJvm)
+    alias(libs.plugins.sborkaLint)
+    alias(libs.plugins.sborkaPublish)
 }
 
 dependencies {
