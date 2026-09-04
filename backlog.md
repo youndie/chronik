@@ -53,12 +53,16 @@
 | [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05, B-11 |
 | [B-12](docs/backlog/B-12-conformance-kit.md) `[ ]` | Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом | P2 | M | B-05 |
 
-## Closed (2)
+## Closed (3)
 
 **Обещания и оракул**
 
 - [B-01](docs/backlog/B-01-semantics-before-code.md) `[x]` - Семантика зафиксирована до кода: что chronik обещает и чего не делает
 - [B-02](docs/backlog/B-02-property-oracle.md) `[x]` - Оракул: property-тест на фейковых часах с инъекцией краха
+
+**Ядро**
+
+- [B-13](docs/backlog/B-13-code-gate.md) `[x]` - Гейт покрывает код, а не только документы
 
 <!-- END INDEX -->
 

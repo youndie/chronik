@@ -16,11 +16,16 @@ help:
 check: gate report
 
 # Blocking. Any of these failing means the documentation is internally inconsistent, which is a
-# defect in the documentation rather than a matter of opinion.
+# defect in the documentation rather than a matter of opinion — or the code does not build and pass
+# its tests, which is not a matter of opinion either.
+#
+# The code is in the same target as the documents on purpose. Two gates mean two things to
+# remember, and the one that is not `make check` is the one that stops being run.
 gate:
 	$(PY) scripts/backlog_index.py --check
 	$(PY) scripts/docs_check.py
 	$(PY) scripts/coverage_map.py --check
+	./gradlew check
 
 # Non-blocking, on purpose. bdd_report counts scenarios, and demanding a percentage is meaningless
 # while acceptance is done by hand. code_anchors goes stale because of a refactor in somebody

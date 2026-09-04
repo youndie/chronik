@@ -32,6 +32,20 @@ jobs:
 
       - run: pip install pyyaml
 
+      # `make check` runs `./gradlew check` too, so the JDK is a prerequisite of the gate rather
+      # than of a separate build job. One target, one thing to remember: the gate that is not
+      # `make check` is the one that stops being run (B-13).
+      #
+      # 21 is JVM_FLOOR, and it is the floor a consumer may be on rather than the newest JDK
+      # available. Building on something newer would let a `java.*` call from a later release in
+      # without the build ever objecting, and the consumer would meet it at class loading.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
       # BEFORE `make check`, and that order is the whole value of this step. Both checks catch a
       # number taken twice, but this one says *which branch took it and under what name*, while the
       # gate says `duplicate ids: B-06`. A failing step stops the job, so whichever runs first is
