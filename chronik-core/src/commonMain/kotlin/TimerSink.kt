@@ -13,8 +13,8 @@ package ru.workinprogress.chronik
  * minute" — and they compensate differently, which is why the distinction is stated here rather
  * than left to be inferred.
  */
-fun interface TimerSink {
-    suspend fun deliver(fired: FiredTimer)
+public fun interface TimerSink {
+    public suspend fun deliver(fired: FiredTimer)
 }
 
 /**
@@ -23,11 +23,11 @@ fun interface TimerSink {
  * Carries [lateness] because that number is worth nothing once it leaves this point: only here is
  * both the due time and the moment of firing known.
  */
-data class FiredTimer(
-    val id: String,
-    val payload: String,
-    val dueAt: EpochSeconds,
-    val firedAt: EpochSeconds,
+public data class FiredTimer(
+    public val id: String,
+    public val payload: String,
+    public val dueAt: EpochSeconds,
+    public val firedAt: EpochSeconds,
     /** Seconds between the due time and this firing; zero when it fired in its own second. */
-    val lateness: Long,
+    public val lateness: Long,
 )

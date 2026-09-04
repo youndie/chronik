@@ -7,13 +7,13 @@ package ru.workinprogress.chronik
  * committing, rolling back, or even knowing what a transaction is made of. All it needs is to be
  * handed one and to write inside it.
  */
-interface TimerTransaction
+public interface TimerTransaction
 
 /**
  * Reading and writing timers. Everything here is storage; no policy lives in this interface.
  */
-interface TimerStore {
-    suspend fun findById(id: String): Timer?
+public interface TimerStore {
+    public suspend fun findById(id: String): Timer?
 
     /**
      * Timers that are due and not held by a live lease, claimed for [owner] until [leaseUntil].
@@ -22,7 +22,7 @@ interface TimerStore {
      * separate write another instance fits, and the whole point of this method is that one does
      * not.
      */
-    suspend fun claimDue(
+    public suspend fun claimDue(
         now: EpochSeconds,
         leaseUntil: EpochSeconds,
         owner: String,
@@ -42,9 +42,9 @@ interface TimerStore {
      * Called only by a worker that was given a lost-race handler, because on a busy store this is
      * a query per idle pass.
      */
-    suspend fun hasDue(now: EpochSeconds): Boolean
+    public suspend fun hasDue(now: EpochSeconds): Boolean
 
-    suspend fun markFired(id: String)
+    public suspend fun markFired(id: String)
 
     /**
      * A delivery attempt failed: count it, and hold the timer until [retryAfter].
@@ -56,7 +56,7 @@ interface TimerStore {
      * one of them is privately observing is one the others walk straight past the moment the lease
      * lapses. A backoff that only the failing instance honours is not a backoff.
      */
-    suspend fun markFailed(
+    public suspend fun markFailed(
         id: String,
         retryAfter: EpochSeconds,
     )
@@ -67,7 +67,7 @@ interface TimerStore {
      * Such a timer needs a person. What it must not do is keep burning attempts, connections and
      * log space on a delivery that has already failed the same way five times.
      */
-    suspend fun markDeadLettered(id: String)
+    public suspend fun markDeadLettered(id: String)
 }
 
 /**
@@ -81,18 +81,18 @@ interface TimerStore {
  *
  * In the type instead, the refusal happens where it can still be acted on.
  */
-interface TransactionalTimerStore : TimerStore {
+public interface TransactionalTimerStore : TimerStore {
     /**
      * Write the timer inside [tx]. Commits nothing: the caller's commit decides whether both their
      * state change and this row become visible, or neither does.
      */
-    suspend fun insert(
+    public suspend fun insert(
         tx: TimerTransaction,
         timer: Timer,
     )
 
     /** Move an existing timer's due time inside [tx]. Returns false if there is no such timer. */
-    suspend fun reschedule(
+    public suspend fun reschedule(
         tx: TimerTransaction,
         id: String,
         dueAt: EpochSeconds,
@@ -104,7 +104,7 @@ interface TransactionalTimerStore : TimerStore {
      * Cancelling a timer whose moment has passed but whose event has not gone out must still work:
      * that window is precisely when a saga rolling back needs it.
      */
-    suspend fun cancel(
+    public suspend fun cancel(
         tx: TimerTransaction,
         id: String,
     ): Boolean

@@ -1,5 +1,6 @@
 package ru.workinprogress.chronik.postgres
 
+import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table
 
 /**
@@ -12,10 +13,10 @@ import org.jetbrains.exposed.v1.core.Table
  * neighbouring library — three indexes described in column comments and declared nowhere — and it
  * surfaces in the consumer's repository, not here.
  */
-class TimersTable(
+public class TimersTable(
     name: String = "chronik_timers",
 ) : Table(name) {
-    val id = varchar("id", 255)
+    public val id: Column<String> = varchar("id", 255)
 
     /**
      * Whole seconds since the epoch, and a `bigint` rather than a timestamp.
@@ -24,26 +25,26 @@ class TimersTable(
      * precision than the library keeps — which is how a caller ends up believing in milliseconds
      * that the poll interval cannot deliver.
      */
-    val dueAt = long("due_at")
+    public val dueAt: Column<Long> = long("due_at")
 
-    val payload = text("payload")
+    public val payload: Column<String> = text("payload")
 
     /** PENDING / FIRED / CANCELLED / DEAD_LETTERED, as the name rather than the ordinal. */
-    val state = varchar("state", 32)
+    public val state: Column<String> = varchar("state", 32)
 
-    val attempts = integer("attempts").default(0)
+    public val attempts: Column<Int> = integer("attempts").default(0)
 
     /** When the current claim expires; null when nobody holds it. */
-    val lockedUntil = long("locked_until").nullable()
+    public val lockedUntil: Column<Long?> = long("locked_until").nullable()
 
-    val lockedBy = varchar("locked_by", 255).nullable()
+    public val lockedBy: Column<String?> = varchar("locked_by", 255).nullable()
 
     // DERIVED FROM THE TABLE NAME, NOT FIXED. In Postgres a constraint or index name belongs to the
     // schema rather than to the table, so a hard-coded one turns the `name` parameter into a lie:
     // the first table creates, and the second fails with "relation pk_chronik_timers already
     // exists". Two schedulers in one schema — a test suite with a table per case is the small
     // version of that, an application running two independent sets of timers is the real one.
-    override val primaryKey = PrimaryKey(id, name = "pk_$name")
+    override val primaryKey: PrimaryKey = PrimaryKey(id, name = "pk_$name")
 
     init {
         // The selection is "state = PENDING and due_at <= now", so the index leads with state and

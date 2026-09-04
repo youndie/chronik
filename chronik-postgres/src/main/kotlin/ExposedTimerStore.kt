@@ -34,12 +34,12 @@ import ru.workinprogress.chronik.TransactionalTimerStore
  * invisible: the state change commits, the timer does not, and nothing looks wrong until an event
  * that nobody is waiting for right now fails to happen in three days.
  */
-class ExposedTimerTransaction internal constructor(
+public class ExposedTimerTransaction internal constructor(
     internal val transaction: JdbcTransaction,
 ) : TimerTransaction
 
 /** Hand chronik the transaction this block is running in. */
-fun JdbcTransaction.asTimerTransaction(): TimerTransaction = ExposedTimerTransaction(this)
+public fun JdbcTransaction.asTimerTransaction(): TimerTransaction = ExposedTimerTransaction(this)
 
 /**
  * Timers on Postgres.
@@ -49,7 +49,7 @@ fun JdbcTransaction.asTimerTransaction(): TimerTransaction = ExposedTimerTransac
  * itself (see [TimersTable]) so a schema generator can produce something that matches what the
  * queries actually filter on.
  */
-class ExposedTimerStore(
+public class ExposedTimerStore(
     private val db: Database,
     private val table: TimersTable = TimersTable(),
 ) : TransactionalTimerStore {
@@ -196,9 +196,9 @@ class ExposedTimerStore(
             }
         }
 
-    override suspend fun markFired(id: String) = mark(id, TimerState.FIRED)
+    override suspend fun markFired(id: String): Unit = mark(id, TimerState.FIRED)
 
-    override suspend fun markDeadLettered(id: String) = mark(id, TimerState.DEAD_LETTERED)
+    override suspend fun markDeadLettered(id: String): Unit = mark(id, TimerState.DEAD_LETTERED)
 
     private suspend fun mark(
         id: String,

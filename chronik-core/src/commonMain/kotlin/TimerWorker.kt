@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.seconds
  * unfired timer is not going anywhere and the next pass picks it up, so "log and carry on" loses
  * nothing here.
  */
-class TimerWorker(
+public class TimerWorker(
     private val store: TimerStore,
     private val sink: TimerSink,
     private val clock: ChronikClock,
@@ -87,7 +87,7 @@ class TimerWorker(
      */
     private val onLostRace: (() -> Unit)? = null,
 ) {
-    fun start(scope: CoroutineScope): Job =
+    public fun start(scope: CoroutineScope): Job =
         scope.launch {
             while (isActive) {
                 try {
@@ -111,7 +111,7 @@ class TimerWorker(
      * the worker woke the required number of times. On a loaded machine that hope does not come
      * true, and the test that relies on it fails for reasons that have nothing to do with the code.
      */
-    suspend fun tick(): Int {
+    public suspend fun tick(): Int {
         val now = clock.now()
         val claimed = store.claimDue(now, now + leaseSeconds, owner, batchSize)
 

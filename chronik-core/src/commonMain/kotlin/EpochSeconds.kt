@@ -12,14 +12,14 @@ package ru.workinprogress.chronik
  * polling, and a promise polling cannot keep is worse than no promise at all.
  */
 @JvmInline
-value class EpochSeconds(
-    val value: Long,
+public value class EpochSeconds(
+    public val value: Long,
 ) : Comparable<EpochSeconds> {
     override fun compareTo(other: EpochSeconds): Int = value.compareTo(other.value)
 
-    operator fun plus(seconds: Long): EpochSeconds = EpochSeconds(value + seconds)
+    public operator fun plus(seconds: Long): EpochSeconds = EpochSeconds(value + seconds)
 
-    operator fun minus(other: EpochSeconds): Long = value - other.value
+    public operator fun minus(other: EpochSeconds): Long = value - other.value
 
     override fun toString(): String = "${value}s"
 }
@@ -32,6 +32,6 @@ value class EpochSeconds(
  * pass and advancing the clock, not by sleeping on the real one and hoping the worker woke the
  * required number of times. On a loaded machine that hope does not come true.
  */
-fun interface ChronikClock {
-    fun now(): EpochSeconds
+public fun interface ChronikClock {
+    public fun now(): EpochSeconds
 }

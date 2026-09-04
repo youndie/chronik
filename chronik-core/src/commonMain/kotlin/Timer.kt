@@ -11,17 +11,17 @@ package ru.workinprogress.chronik
  * belongs to the receiver, so the key has to travel where the receiver reads it — inside the
  * payload the application composed. A field here would suggest chronik does something with it.
  */
-data class Timer(
-    val id: String,
-    val dueAt: EpochSeconds,
-    val payload: String,
-    val state: TimerState = TimerState.PENDING,
+public data class Timer(
+    public val id: String,
+    public val dueAt: EpochSeconds,
+    public val payload: String,
+    public val state: TimerState = TimerState.PENDING,
     /**
      * How many delivery attempts have failed. Kept in storage rather than in the worker's memory
      * because this is what sends a timer to the dead letter: a counter that a restart resets means
      * a systematically failing timer retries for ever and never gets there.
      */
-    val attempts: Int = 0,
+    public val attempts: Int = 0,
     /**
      * Whose it is and until when, in whole seconds. `null` means nobody holds it.
      *
@@ -30,11 +30,11 @@ data class Timer(
      * INSTANTLY — and the next instance would take a timer that may already have been delivered.
      * A deadline in a column is what makes "claimable again in N seconds" a thing that exists.
      */
-    val lockedUntil: EpochSeconds? = null,
-    val lockedBy: String? = null,
+    public val lockedUntil: EpochSeconds? = null,
+    public val lockedBy: String? = null,
 ) {
     /** Due, and not held by a live lease. */
-    fun isClaimableAt(now: EpochSeconds): Boolean =
+    public fun isClaimableAt(now: EpochSeconds): Boolean =
         state == TimerState.PENDING &&
             dueAt <= now &&
             (lockedUntil == null || lockedUntil < now)
@@ -46,10 +46,10 @@ data class Timer(
      * publishes. Delivery latency on its own cannot tell "fired on time" from "picked up forty
      * minutes after the process came back".
      */
-    fun latenessAt(now: EpochSeconds): Long = (now - dueAt).coerceAtLeast(0)
+    public fun latenessAt(now: EpochSeconds): Long = (now - dueAt).coerceAtLeast(0)
 }
 
-enum class TimerState {
+public enum class TimerState {
     /** Waiting for its moment, or waiting to be retried after a failed delivery. */
     PENDING,
 

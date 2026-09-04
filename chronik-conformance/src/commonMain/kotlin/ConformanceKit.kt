@@ -18,12 +18,12 @@ import ru.workinprogress.chronik.TimerState
  * FINDINGS ARE COLLECTED, NOT THROWN. A run reaches the end and shows everything, because a new
  * backend otherwise gets fixed one finding per run.
  */
-class ConformanceKit {
+public class ConformanceKit {
     /** Every case, in the order they are run. Public so a reader can see the corpus without running it. */
-    val cases: List<Case> = corpus()
+    public val cases: List<Case> = corpus()
 
-    class Case internal constructor(
-        val rule: String,
+    public class Case internal constructor(
+        public val rule: String,
         internal val check: suspend (TimerStoreSubject) -> String?,
     )
 
@@ -33,7 +33,7 @@ class ConformanceKit {
      * A case that throws is a finding too, and its message says so: an implementation that fails
      * with an exception has not passed, and swallowing that would be the kit lying on its behalf.
      */
-    suspend fun run(subject: TimerStoreSubject): List<Finding> {
+    public suspend fun run(subject: TimerStoreSubject): List<Finding> {
         val findings = mutableListOf<Finding>()
         for (case in cases) {
             subject.reset()

@@ -19,7 +19,7 @@ package ru.workinprogress.chronik
  * Every operation takes the caller's transaction and commits nothing. Whether the timer and the
  * business row both become visible is the caller's commit to decide, which is the entire point.
  */
-class Chronik(
+public class Chronik(
     private val store: TransactionalTimerStore,
     private val clock: ChronikClock,
 ) {
@@ -28,7 +28,7 @@ class Chronik(
      * the lateness recorded: refusing it would push the caller into rounding times up, and a due
      * time that has just passed is the normal case after any pause.
      */
-    suspend fun schedule(
+    public suspend fun schedule(
         tx: TimerTransaction,
         id: String,
         at: EpochSeconds,
@@ -45,7 +45,7 @@ class Chronik(
      * change to one row; expressed as two operations it has a window in which the timer does not
      * exist, and a worker passing through that window sees nothing to fire.
      */
-    suspend fun reschedule(
+    public suspend fun reschedule(
         tx: TimerTransaction,
         id: String,
         at: EpochSeconds,
@@ -57,13 +57,13 @@ class Chronik(
      * Cancelling after the due time but before the event has gone out must work: that window is
      * exactly when a saga rolling back needs it.
      */
-    suspend fun cancel(
+    public suspend fun cancel(
         tx: TimerTransaction,
         id: String,
     ): Boolean = store.cancel(tx, id)
 
     /** The clock this scheduler reads, so a caller can express "in an hour" without a second one. */
-    fun now(): EpochSeconds = clock.now()
+    public fun now(): EpochSeconds = clock.now()
 }
 
 /**
@@ -74,7 +74,7 @@ class Chronik(
  * distinction matters: a failure at the first schedule happens under load, in a request, in a
  * transaction that is about to commit the business change regardless.
  */
-fun chronik(
+public fun chronik(
     store: TimerStore,
     clock: ChronikClock,
 ): Chronik {
