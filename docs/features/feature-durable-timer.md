@@ -66,7 +66,8 @@ HTTP-поверхности.
 | chronik-core | `chronik-core/src/commonTest/kotlin/OracleTest.kt` — инвариант на 1200 последовательностях |
 | chronik-core | `chronik-core/src/commonTest/kotlin/ChronikOperationsTest.kt` — исходы операций поимённо |
 | chronik-core | `chronik-core/src/commonTest/kotlin/TimerBoundaryTest.kt` — граница срока и аренды |
-| chronik-postgres | `chronik-postgres/src/main/kotlin/TimersTable.kt` — колонки и индексы (ещё нет) |
+| chronik-postgres | `chronik-postgres/src/main/kotlin/TimersTable.kt` — колонки и индексы |
+| chronik-conformance | `chronik-conformance/src/commonMain/kotlin/ConformanceKit.kt` — те же правила как корпус для любого бэкенда |
 
 Соседний модуль, чьи решения здесь сознательно перевёрнуты:
 `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt`.
@@ -129,7 +130,7 @@ HTTP-поверхности.
 * **When:** система доведена до состояния, где сроки всех таймеров в прошлом
 * **Then:** множество сработавших равно множеству «дошли до срока и не отменены»
 * **And:** ни одно не сработало раньше своего срока, и опоздание каждого посчитано
-* **Automated:** `OracleTest`
+* **Automated:** `OracleTest` (модель), `PostgresConformanceTest` (те же правила против бэкенда)
 
 Это спека целиком; остальные сценарии — её частные случаи, оставленные читаемыми.
 

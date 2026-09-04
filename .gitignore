@@ -8,3 +8,4 @@ buildSrc/build/
 .kotlin/
 dev/worker/build/
 chronik-benchmark/build/
+chronik-conformance/build/

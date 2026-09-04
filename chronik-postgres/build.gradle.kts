@@ -28,3 +28,10 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+dependencies {
+    // The corpus, run against this backend. A test dependency: an application wiring up the store
+    // has no use for it, and a library that dragged its own conformance kit onto every consumer's
+    // classpath would be shipping its test suite.
+    testImplementation(project(":chronik-conformance"))
+}

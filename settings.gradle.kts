@@ -35,3 +35,8 @@ project(":dev-worker").projectDir = file("dev/worker")
 // The measurement stand. Not published: it exists to produce the numbers in docs/benchmarking.md,
 // and a number without the stand that produced it is not a measurement.
 include(":chronik-benchmark")
+
+// The corpus of cases every storage implementation has to satisfy. Written while there is only one
+// implementation, on purpose: a corpus written after the second describes the intersection of the
+// two rather than the contract.
+include(":chronik-conformance")
