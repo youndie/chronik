@@ -38,15 +38,14 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (3)
+## Open (2)
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
-| [B-11](docs/backlog/B-11-scheduler-boundary.md) `[?]` | Решить судьбу petich-scheduler: слой совместимости или устаревание | P1 | M | B-05 |
-| [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05, B-11 |
+| [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05 |
 | [B-12](docs/backlog/B-12-conformance-kit.md) `[ ]` | Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом | P2 | M | B-05 |
 
-## Closed (10)
+## Closed (11)
 
 **Обещания и оракул**
 
@@ -69,6 +68,10 @@
 **Числа и второй бэкенд**
 
 - [B-09](docs/backlog/B-09-lag-measurement.md) `[x]` - Замер: опоздание p50/p95 и деградация скана без индекса по due_at
+
+**Потребители**
+
+- [B-11](docs/backlog/B-11-scheduler-boundary.md) `[x]` - Решить судьбу petich-scheduler: слой совместимости или устаревание
 
 <!-- END INDEX -->
 
