@@ -2,7 +2,7 @@
 id: feature-durable-timer
 title: Долговечный таймер — schedule, cancel, reschedule
 type: feature
-status: draft
+status: active
 owner: unassigned
 involved_services:
   - chronik-core

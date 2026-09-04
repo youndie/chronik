@@ -2,7 +2,7 @@
 id: feature-delivery
 title: "Доставка события: приёмники, backoff и dead letter"
 type: feature
-status: draft
+status: active
 owner: unassigned
 involved_services:
   - chronik-core

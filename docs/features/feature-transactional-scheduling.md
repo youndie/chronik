@@ -2,7 +2,7 @@
 id: feature-transactional-scheduling
 title: Таймер в той же транзакции, что и бизнес-запись
 type: feature
-status: draft
+status: active
 owner: unassigned
 involved_services:
   - chronik-core

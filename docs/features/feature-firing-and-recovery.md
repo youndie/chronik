@@ -2,7 +2,7 @@
 id: feature-firing-and-recovery
 title: Срабатывание, аренда и восстановление после падения
 type: feature
-status: draft
+status: active
 owner: unassigned
 involved_services:
   - chronik-core
