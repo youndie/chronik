@@ -46,8 +46,27 @@ interface TimerStore {
 
     suspend fun markFired(id: String)
 
-    suspend fun markFailed(id: String)
+    /**
+     * A delivery attempt failed: count it, and hold the timer until [retryAfter].
+     *
+     * THE HOLD IS THE BACKOFF, and it lives in the row rather than in the worker's memory. That is
+     * a departure from how the neighbouring outbox relay does it, and the reason is a difference
+     * between the two: the outbox relay is the only reader of its rows, so remembering "not before
+     * 10:04" in a map is enough. Here several instances compete for the same row, and an interval
+     * one of them is privately observing is one the others walk straight past the moment the lease
+     * lapses. A backoff that only the failing instance honours is not a backoff.
+     */
+    suspend fun markFailed(
+        id: String,
+        retryAfter: EpochSeconds,
+    )
 
+    /**
+     * Attempts are exhausted. Terminal, and unlike a failure this one is never selected again.
+     *
+     * Such a timer needs a person. What it must not do is keep burning attempts, connections and
+     * log space on a delivery that has already failed the same way five times.
+     */
     suspend fun markDeadLettered(id: String)
 }
 

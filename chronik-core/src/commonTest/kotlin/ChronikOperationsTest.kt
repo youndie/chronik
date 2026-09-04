@@ -32,7 +32,10 @@ class ChronikOperationsTest {
 
         override suspend fun markFired(id: String) = Unit
 
-        override suspend fun markFailed(id: String) = Unit
+        override suspend fun markFailed(
+            id: String,
+            retryAfter: EpochSeconds,
+        ) = Unit
 
         override suspend fun markDeadLettered(id: String) = Unit
     }

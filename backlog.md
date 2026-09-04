@@ -38,18 +38,17 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (6)
+## Open (5)
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
-| [B-06](docs/backlog/B-06-delivery-sinks.md) `[ ]` | Доставка: приёмники, backoff и dead letter после N | P1 | M | B-05 |
 | [B-07](docs/backlog/B-07-mutation-run-on-due.md) `[ ]` | Мутационный прогон по выборке «что пора» и по проверке аренды | P1 | M | B-05 |
 | [B-09](docs/backlog/B-09-lag-measurement.md) `[ ]` | Замер: опоздание p50/p95 и деградация скана без индекса по due_at | P1 | M | B-05, B-04 |
 | [B-11](docs/backlog/B-11-scheduler-boundary.md) `[?]` | Решить судьбу petich-scheduler: слой совместимости или устаревание | P1 | M | B-05 |
 | [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05, B-11 |
 | [B-12](docs/backlog/B-12-conformance-kit.md) `[ ]` | Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом | P2 | M | B-05 |
 
-## Closed (7)
+## Closed (8)
 
 **Обещания и оракул**
 
@@ -65,6 +64,7 @@
 **Первый бэкенд**
 
 - [B-05](docs/backlog/B-05-postgres-backend.md) `[x]` - Бэкенд Postgres: выборка SKIP LOCKED и аренда колонкой
+- [B-06](docs/backlog/B-06-delivery-sinks.md) `[x]` - Доставка: приёмники, backoff и dead letter после N
 - [B-08](docs/backlog/B-08-kill-harness.md) `[x]` - Стенд: убить воркера со взятой арендой и увидеть, что таймер ушёл другому
 
 <!-- END INDEX -->

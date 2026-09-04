@@ -201,18 +201,23 @@ class ExposedTimerStore(
     }
 
     /**
-     * A failed delivery: the attempt count moves and the row stays PENDING and stays leased.
+     * A failed delivery: the attempt count moves and the hold is pushed out to [retryAfter].
      *
-     * Releasing the lease here would hand the timer to another instance immediately, which turns a
-     * sink that is down into a stampede. Waiting for the lease to lapse is the backoff that costs
-     * nothing to implement.
+     * Releasing the hold here would hand the timer to another instance at once, which turns a sink
+     * that is down into a stampede. Extending it is the backoff, and it lives in the row precisely
+     * so that every instance honours it — an interval kept in one worker's memory is one the other
+     * instances never see.
      */
-    override suspend fun markFailed(id: String) {
+    override suspend fun markFailed(
+        id: String,
+        retryAfter: EpochSeconds,
+    ) {
         dbQuery {
             table.update({ table.id eq id }) {
                 // An increment in SQL, not a read followed by a write: two workers failing to
                 // deliver the same timer must not each write back the same count.
                 it[attempts] = table.attempts + 1
+                it[lockedUntil] = retryAfter.value
             }
         }
     }

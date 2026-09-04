@@ -218,12 +218,21 @@ class ExposedTimerStoreTest {
                 }
             }
 
-            store.markFailed("t1")
-            store.markFailed("t1")
+            store.markFailed("t1", EpochSeconds(100))
+            store.markFailed("t1", EpochSeconds(200))
 
             val stored = store.findById("t1")
             assertEquals(2, stored?.attempts)
             assertEquals(TimerState.PENDING, stored?.state)
+            assertEquals(EpochSeconds(200), stored?.lockedUntil, "the hold moved to the new backoff")
+
+            // Held for the backoff, and claimable once it passes — by anybody, which is the point
+            // of keeping the interval in the row instead of in the failing worker's memory.
+            assertTrue(store.claimDue(EpochSeconds(150), EpochSeconds(180), "other", 10).isEmpty())
+            assertEquals(
+                listOf("t1"),
+                store.claimDue(EpochSeconds(201), EpochSeconds(231), "other", 10).map { it.id },
+            )
         }
 
     @Test

@@ -117,10 +117,14 @@ class InMemoryTimerStore : TransactionalTimerStore {
         timers[id]?.let { timers[id] = it.copy(state = TimerState.FIRED, lockedUntil = null, lockedBy = null) }
     }
 
-    override suspend fun markFailed(id: String) {
-        // Stays PENDING and stays leased: the retry is what the lapsing lease buys. Only the
-        // attempt count moves.
-        timers[id]?.let { timers[id] = it.copy(attempts = it.attempts + 1) }
+    override suspend fun markFailed(
+        id: String,
+        retryAfter: EpochSeconds,
+    ) {
+        // Stays PENDING, and the hold is pushed out to the backoff deadline. Holding it here rather
+        // than in the worker is what makes the wait apply to every instance and not just the one
+        // that failed.
+        timers[id]?.let { timers[id] = it.copy(attempts = it.attempts + 1, lockedUntil = retryAfter) }
     }
 
     override suspend fun markDeadLettered(id: String) {

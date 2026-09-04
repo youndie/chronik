@@ -49,8 +49,32 @@ class TimerWorker(
      * the process came back".
      */
     private val onFired: (id: String, lateness: Long) -> Unit = { _, _ -> },
-    /** A delivery that threw. The timer stays PENDING and is retried when its lease lapses. */
+    /**
+     * How many delivery attempts a timer gets before it goes to the dead letter.
+     *
+     * A systematic failure — a misconfigured transport, a receiver that has been removed — must not
+     * keep an event burning for ever.
+     */
+    private val maxAttempts: Int = 5,
+    /** The first retry waits this long; each subsequent one doubles, up to [maxBackoffSeconds]. */
+    private val baseBackoffSeconds: Long = 1,
+    /**
+     * The ceiling on the wait between attempts.
+     *
+     * Without it the delay grows without bound for a timer that fails long and systematically,
+     * which means the last few attempts before the dead letter happen days apart and the operator
+     * sees a timer that is neither delivered nor given up on.
+     */
+    private val maxBackoffSeconds: Long = 300,
+    /** A delivery that threw. The timer is held until its backoff expires, then retried. */
     private val onDeliveryFailed: (id: String, cause: Throwable) -> Unit = { _, _ -> },
+    /**
+     * Attempts exhausted; the timer is terminal and will not be tried again.
+     *
+     * Reported because this is the one outcome nobody finds by looking at what fired: the timer
+     * simply stops existing as far as every other query is concerned.
+     */
+    private val onDeadLettered: (id: String, attempts: Int) -> Unit = { _, _ -> },
     /**
      * A pass that claimed nothing while timers were due — this worker lost the race to another.
      *
@@ -116,6 +140,7 @@ class TimerWorker(
                 throw e
             } catch (e: Exception) {
                 onDeliveryFailed(timer.id, e)
+                recordFailure(timer, firedAt, e)
                 continue
             }
 
@@ -134,5 +159,40 @@ class TimerWorker(
             }
         }
         return fired
+    }
+
+    private suspend fun recordFailure(
+        timer: Timer,
+        now: EpochSeconds,
+        cause: Throwable,
+    ) {
+        val attempts = timer.attempts + 1
+        try {
+            if (attempts >= maxAttempts) {
+                store.markDeadLettered(timer.id)
+                onDeadLettered(timer.id, attempts)
+            } else {
+                store.markFailed(timer.id, now + backoffSeconds(attempts))
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Recording the failure failed too. The timer keeps the lease it already has and comes
+            // back when that lapses, so nothing is lost — only the backoff for this one attempt.
+            // TODO: log this, and `cause` with it
+        }
+    }
+
+    /**
+     * Exponential from [baseBackoffSeconds], capped at [maxBackoffSeconds].
+     *
+     * The shift is clamped before it is taken: `1L shl 64` is not a very large number, it is 1, and
+     * a backoff that wraps round to "immediately" on the sixty-fifth attempt is the kind of defect
+     * that only appears in a system that has been failing for a very long time.
+     */
+    internal fun backoffSeconds(attempt: Int): Long {
+        val exponent = (attempt - 1).coerceIn(0, 40)
+        val scaled = baseBackoffSeconds * (1L shl exponent)
+        return if (scaled > maxBackoffSeconds || scaled < 0) maxBackoffSeconds else scaled
     }
 }
