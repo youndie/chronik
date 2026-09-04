@@ -42,7 +42,7 @@
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
-| [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05 |
+| [B-10](docs/backlog/B-10-petich-bridge.md) `[?]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05 |
 
 ## Closed (12)
 
