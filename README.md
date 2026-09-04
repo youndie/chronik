@@ -1,5 +1,11 @@
 # chronik
 
+[![kotlin](https://img.shields.io/badge/Kotlin-2.4.10-blue?logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![chronik-core](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-core?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-core)
+[![chronik-postgres](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-postgres?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-postgres)
+[![chronik-conformance](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-conformance?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-conformance)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 **a durable timer for Kotlin, and nothing else** — `schedule(id, at, payload)`, and at `at` (or
 later, but never earlier and never lost) the fact "it is time" leaves the library
 
@@ -20,17 +26,31 @@ is correct, and only the thing nobody is watching for never happens.
 
 chronik writes the timer **in the caller's transaction**, so the two commit together or not at all.
 
-### 🚧 Status
+### 📦 Installation
 
-Nothing is implemented yet. What exists today is the specification and the reasoning behind it:
+```kotlin
+repositories {
+    maven("https://reposilite.kotlin.website/snapshots")
+}
+
+dependencies {
+    implementation("io.github.youndie:chronik-core:0.1.0.4")
+    implementation("io.github.youndie:chronik-postgres:0.1.0.4")
+}
+```
+
+`chronik-postgres` ships no driver, no connection pool and no DDL: it takes an Exposed `Database`
+you hand it, and the table describes itself — indexes included — so a schema generator produces
+something that matches what the queries actually filter on.
+
+### 📖 Where the reasoning is
 
 - **[docs/research/research-architecture.md](docs/research/research-architecture.md)** — the
-  verified facts this design rests on, eight decisions with their rejected alternatives, and the
+  verified facts this design rests on, ten decisions with their rejected alternatives, and the
   open risks;
-- **[backlog.md](backlog.md)** — the order of work and its acceptance criteria.
-
-The behaviour documents live on the branch `docs/v1-specification` until the code they describe
-exists. `main` describes what exists.
+- **[docs/benchmarking.md](docs/benchmarking.md)** — the numbers, with what was measured and on
+  what;
+- **[backlog.md](backlog.md)** — every item, closed with what it actually cost.
 
 ### 🚫 What it does not do
 
