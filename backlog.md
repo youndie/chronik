@@ -38,11 +38,10 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (12)
+## Open (11)
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
-| [B-01](docs/backlog/B-01-semantics-before-code.md) `[ ]` | Семантика зафиксирована до кода: что chronik обещает и чего не делает | P0 | S | - |
 | [B-02](docs/backlog/B-02-property-oracle.md) `[ ]` | Оракул: property-тест на фейковых часах с инъекцией краха | P0 | L | B-01 |
 | [B-03](docs/backlog/B-03-core-api.md) `[ ]` | Ядро: schedule / cancel / reschedule и запись в чужую транзакцию | P0 | M | B-01 |
 | [B-05](docs/backlog/B-05-postgres-backend.md) `[ ]` | Бэкенд Postgres: выборка SKIP LOCKED и аренда колонкой | P0 | L | B-03 |
@@ -55,7 +54,11 @@
 | [B-10](docs/backlog/B-10-petich-bridge.md) `[ ]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05, B-11 |
 | [B-12](docs/backlog/B-12-conformance-kit.md) `[ ]` | Приёмочный набор бэкенда, чтобы второй бэкенд был проверяем тем же корпусом | P2 | M | B-05 |
 
-## Closed (0)
+## Closed (1)
+
+**Обещания и оракул**
+
+- [B-01](docs/backlog/B-01-semantics-before-code.md) `[x]` - Семантика зафиксирована до кода: что chronik обещает и чего не делает
 
 <!-- END INDEX -->
 

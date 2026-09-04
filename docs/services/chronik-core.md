@@ -13,10 +13,11 @@ publishes:
 
 # chronik-core
 
-> **Модуль ещё не существует.** Документ описывает то, что будет собрано по
-> [B-03](../backlog/B-03-core-api.md) и [B-04](../backlog/B-04-lateness-metric.md); пути в разделе
-> «Якоря» указывают, где это появится. Слой `services/` не имеет поля `status`, поэтому оговорка
-> живёт здесь, а сам документ — на ветке `docs/v1-specification` до тех пор, пока код не приедет.
+> **Модуль существует наполовину.** Есть типы и контракты — единица времени, строка таймера,
+> контракты хранилища и приёмника ([B-01](../backlog/B-01-semantics-before-code.md), закрыт).
+> Нет ни воркера, ни реализации операций: это [B-03](../backlog/B-03-core-api.md) и
+> [B-04](../backlog/B-04-lateness-metric.md). Слой `services/` не имеет поля `status`, поэтому
+> оговорка живёт здесь, а документ — на ветке `docs/v1-specification`, пока фичи в драфте.
 
 ## 1. Ответственность
 
@@ -40,10 +41,15 @@ publishes:
 
 ## 2a. Якоря
 
-| Файл | Что там |
-|---|---|
-| `chronik-core/src/commonMain/kotlin/` | три операции, контракты хранилища и приёмника, воркер |
-| `chronik-core/src/commonTest/kotlin/` | оракул: property-тест на фейковых часах ([B-02](../backlog/B-02-property-oracle.md)) |
+| Файл | Что там | Есть? |
+|---|---|---|
+| `chronik-core/src/commonMain/kotlin/EpochSeconds.kt` | `EpochSeconds` и `ChronikClock` | да |
+| `chronik-core/src/commonMain/kotlin/Timer.kt` | строка таймера, состояния, `isClaimableAt`, `latenessAt` | да |
+| `chronik-core/src/commonMain/kotlin/TimerStore.kt` | `TimerStore` и `TransactionalTimerStore` | да |
+| `chronik-core/src/commonMain/kotlin/TimerSink.kt` | `TimerSink`, `FiredTimer` | да |
+| `chronik-core/src/commonTest/kotlin/TimerBoundaryTest.kt` | граница срока и аренды, с проверенным положительным контролем | да |
+| `chronik-core/src/commonMain/kotlin/` | три операции и воркер | [B-03](../backlog/B-03-core-api.md) |
+| `chronik-core/src/commonTest/kotlin/` | оракул на фейковых часах | [B-02](../backlog/B-02-property-oracle.md) |
 
 Образцы, по которым это делается, читаются здесь:
 
