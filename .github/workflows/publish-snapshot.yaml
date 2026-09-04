@@ -1,0 +1,56 @@
+name: Publish chronik snapshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v5
+
+      - uses: youndie/sborka/.github/actions/setup-kotlin@main
+
+      # The head of the version from gradle.properties with the run number on the tail: two
+      # publishes in a row must not produce the same artefact, or a consumer cannot tell them apart
+      # and keeps the cached older one.
+      - name: Determine version
+        id: ver
+        uses: youndie/sborka/.github/actions/determine-version@main
+
+      # `build` before `publish`, and not only to be tidy: `build` runs the Postgres tests, and a
+      # snapshot that fails its own conformance corpus is one a consumer would take and trust.
+      # Docker is present on the hosted Linux runners, so those tests run here as they do locally.
+      - name: Build and publish
+        run: ./gradlew build publishAllPublicationsToWipRepository --no-daemon
+        env:
+          ORG_GRADLE_PROJECT_REPOSILITE_USER: ${{ secrets.REPOSILITE_USER }}
+          ORG_GRADLE_PROJECT_REPOSILITE_SECRET: ${{ secrets.REPOSILITE_SECRET }}
+          ORG_GRADLE_PROJECT_VERSION: ${{ steps.ver.outputs.version }}
+
+  # What a consumer receives, read from the repository AFTER the upload rather than from a build
+  # directory before it. The two are the same bytes and not the same event: a file that failed to
+  # upload, or a coordinate that quietly resolves to the previous version, does not exist until
+  # something asks the repository — and neither of those fails a publish.
+  #
+  # A separate job so that a finding here cannot be mistaken for a publish that did not happen.
+  consumer:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: What a consumer gets
+        uses: youndie/proba@main
+        with:
+          # All three published modules. A consumer starts from any of them, and the cost is a real
+          # consumer build per coordinate — which is what makes an `implementation` that should have
+          # been `api` distinguishable from one that is correct.
+          coordinate: |
+            io.github.youndie:chronik-core:${{ needs.publish.outputs.version }}
+            io.github.youndie:chronik-postgres:${{ needs.publish.outputs.version }}
+            io.github.youndie:chronik-conformance:${{ needs.publish.outputs.version }}
+          repository: https://reposilite.kotlin.website/snapshots

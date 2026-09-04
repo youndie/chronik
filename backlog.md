@@ -38,11 +38,12 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (1)
+## Open (2)
 
 | Task | | Priority | Size | Blocked by |
 |---|---|---|---|---|
 | [B-10](docs/backlog/B-10-petich-bridge.md) `[?]` | Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация | P2 | L | B-05 |
+| [B-14](docs/backlog/B-14-publish-and-sborka-bump.md) `[ ]` | Публикация: workflow заведён, координата ждёт удалённого репозитория | infra | S | - |
 
 ## Closed (12)
 
