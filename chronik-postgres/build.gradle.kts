@@ -1,8 +1,8 @@
 plugins {
     kotlin("jvm")
+    id("chronik.publishing")
 }
 
-group = "io.github.youndie"
 
 repositories {
     mavenCentral()
