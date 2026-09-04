@@ -1,0 +1,22 @@
+# Postgres for the handover stand, and nothing else.
+#
+# The workers deliberately run as ORDINARY PROCESSES on the host rather than as containers. What
+# this stand has to produce is a worker that dies with a lease in its hand and no chance to release
+# it, and `kill -9` on a JVM does that exactly. Putting them in containers would add an image build
+# to every run and change nothing about the claim — the neighbouring stand that this is modelled on
+# containerises its workers because they are servers with an HTTP surface, and these are not: the
+# database is the source of truth here and can simply be asked.
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: chronik
+      POSTGRES_USER: chronik
+      POSTGRES_PASSWORD: chronik
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chronik -d chronik"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

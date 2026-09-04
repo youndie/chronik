@@ -26,3 +26,8 @@ include(":chronik-core")
 // The only module that knows SQL. Owns the table, the selection and the lease; ships no DDL and no
 // driver, because choosing those is the application's decision.
 include(":chronik-postgres")
+
+// The handover stand's worker. Not published and not part of the library: it exists so that
+// `dev/check-handover.sh` has a real process to kill.
+include(":dev-worker")
+project(":dev-worker").projectDir = file("dev/worker")

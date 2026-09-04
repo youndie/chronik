@@ -6,10 +6,11 @@
 
 PY ?= python3
 
-.PHONY: check gate report fix help
+.PHONY: check gate report fix stand help
 
 help:
 	@echo "make check   - the gate: blocking checks, exactly what CI runs"
+	@echo "make stand   - the handover stand: kills a worker holding a timer (needs docker)"
 	@echo "make report  - non-blocking reports: BDD coverage, code anchors"
 	@echo "make fix     - regenerate the backlog index, fill in missing coverage-map lines"
 
@@ -47,3 +48,13 @@ report:
 fix:
 	$(PY) scripts/backlog_index.py
 	$(PY) scripts/coverage_map.py --fix
+
+# NOT part of `make check`, and this is the one place that rule is bent — so the reason is here
+# rather than assumed. The stand starts Postgres, builds a worker, runs three JVMs and kills one; it
+# takes the better part of a minute and needs a working docker, which a contributor editing a
+# document does not have to have.
+#
+# A check outside the gate rots unseen, so CI runs this target in a job of its own. If that job
+# stops being green nobody has to notice by accident.
+stand:
+	./dev/check-handover.sh

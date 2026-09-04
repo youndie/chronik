@@ -53,7 +53,9 @@ tags: [durability, observability]
 | chronik-core | `chronik-core/src/commonTest/kotlin/ObservabilityTest.kt` — опоздание, проигранная гонка, провал доставки |
 | chronik-postgres | `chronik-postgres/src/main/kotlin/ExposedTimerStore.kt` — выборка и аренда |
 | chronik-postgres | `chronik-postgres/src/test/kotlin/SkipLockedTest.kt` — `SKIP LOCKED` при двух открытых транзакциях |
-| стенд | `dev/check-handover.sh`, `dev/docker-compose.yml` — SIGKILL со взятой арендой |
+| стенд | `dev/check-handover.sh` — SIGKILL со взятой арендой, три процесса |
+| стенд | `dev/docker-compose.yml` — Postgres для стенда; воркеры на хосте, а не в контейнерах |
+| стенд | `dev/worker/src/main/kotlin/Main.kt` — воркер стенда и его лог доставок |
 
 Проверенные образцы:
 
@@ -82,9 +84,10 @@ tags: [durability, observability]
 * **When:** `w1` убит сигналом `KILL` — не остановлен мягко
 * **Then:** в пределах `L` плюс один интервал опроса `t1` доставлен другим воркером
 * **And:** доставлен **ровно один раз**, а не «доставлен»
-* **And:** состояние спрошено у выжившего воркера, а не у убитого
-* **Automated:** `OracleTest` — **только форму на модели**: убийства процесса, настоящей аренды
-  соединения и `SKIP LOCKED` там нет, их проверяет стенд B-08
+* **And:** состояние спрошено у Postgres, а не у убитого воркера
+* **Automated:** `dev/check-handover.sh` — настоящий `kill -9` по настоящему процессу.
+  `OracleTest` покрывает только форму на модели: процессов, аренды соединения и `SKIP LOCKED`
+  там нет
 
 ### Scenario: просроченное при старте срабатывает с опозданием
 

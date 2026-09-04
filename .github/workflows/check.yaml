@@ -85,6 +85,32 @@ jobs:
       - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: python3 scripts/docs_check.py --on-main
 
+  # The handover stand, in a job of its own because it is the one check `make check` deliberately
+  # leaves out: it needs a working docker and the better part of a minute, and a contributor editing
+  # a document has neither. Left only in the Makefile it would rot unseen, so it runs here on every
+  # push and pull request — the claim it makes (a worker killed holding a timer loses it to another
+  # instance, exactly once) is the reason the lease column exists at all.
+  stand:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Docker is present on the GitHub-hosted Linux runners; the stand brings up its own Postgres.
+      - run: make stand
+
+      # The worker logs say which instance did what, and on a failure that is the first thing
+      # anybody wants. They are useless when the run is green, hence the condition.
+      - if: failure()
+        run: cat /tmp/chronik-worker-*.log || true
+
   # Separate from the gate, and on a schedule rather than on a pull request, because an anchor rots
   # when somebody refactors a **different** repository. A pull request here is the least likely
   # moment for one to break, and running it there trains people to ignore a red build they did not
