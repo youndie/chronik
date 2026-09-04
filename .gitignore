@@ -7,3 +7,4 @@ local.properties
 buildSrc/build/
 .kotlin/
 dev/worker/build/
+chronik-benchmark/build/

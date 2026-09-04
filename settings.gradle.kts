@@ -31,3 +31,7 @@ include(":chronik-postgres")
 // `dev/check-handover.sh` has a real process to kill.
 include(":dev-worker")
 project(":dev-worker").projectDir = file("dev/worker")
+
+// The measurement stand. Not published: it exists to produce the numbers in docs/benchmarking.md,
+// and a number without the stand that produced it is not a measurement.
+include(":chronik-benchmark")

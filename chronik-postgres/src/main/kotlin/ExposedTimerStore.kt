@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.isNull
 import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.core.lessEq
@@ -174,12 +175,20 @@ class ExposedTimerStore(
                     .forUpdate(ForUpdateOption.PostgreSQL.ForUpdate(ForUpdateOption.PostgreSQL.MODE.SKIP_LOCKED))
                     .map { it.toDomain() }
 
-            claimable.map { timer ->
-                table.update({ table.id eq timer.id }) {
+            if (claimable.isEmpty()) {
+                emptyList()
+            } else {
+                // ONE update for the whole batch, not one per row.
+                //
+                // Per-row was the first shape and the benchmark is what condemned it: claiming
+                // twenty timers cost twenty-one round trips, which swamped everything else — the
+                // selection this method is named after was 0.3% of its own cost, and the stand
+                // could not see the index being dropped through the noise of the updates.
+                table.update({ table.id inList claimable.map { it.id } }) {
                     it[lockedUntil] = leaseUntil.value
                     it[lockedBy] = owner
                 }
-                timer.copy(lockedUntil = leaseUntil, lockedBy = owner)
+                claimable.map { it.copy(lockedUntil = leaseUntil, lockedBy = owner) }
             }
         }
 
