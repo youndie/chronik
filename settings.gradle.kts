@@ -10,7 +10,14 @@ pluginManagement {
         // plugin is applied — including the sborka one, which is fetched through it.
         maven("https://reposilite.kotlin.website/snapshots") {
             name = "wip-snapshots"
-            content { includeGroupByRegex("ru\\.workinprogress.*") }
+            content {
+                // Both groups on purpose. The portfolio is moving to `io.github.youndie` and sborka
+                // is already there — the plugin marker and the jar behind it are under the new one.
+                // The old one is held by the library versions published before the move: they are
+                // still on the server and resolve as before.
+                includeGroupByRegex("io\\.github\\.youndie.*")
+                includeGroupByRegex("ru\\.workinprogress.*")
+            }
         }
     }
 }
@@ -21,7 +28,7 @@ plugins {
     // Taking these rather than hand-rolling was decided by finding, an hour after writing one by
     // hand, that the shared version already carried the same defect and its fix: a `kotlin("jvm")`
     // module whose publish task reports success and uploads nothing.
-    id("ru.workinprogress.sborka.settings") version "0.2.0.29"
+    id("io.github.youndie.sborka.settings") version "0.3.0.41"
 }
 
 // The primitive: the three operations, the contracts of storage and of the sink, the worker.
