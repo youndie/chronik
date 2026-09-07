@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik.benchmark
+package io.github.youndie.chronik.benchmark
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -7,13 +7,13 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.batchInsert
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import ru.workinprogress.chronik.ChronikClock
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.TimerSink
-import ru.workinprogress.chronik.TimerState
-import ru.workinprogress.chronik.TimerWorker
-import ru.workinprogress.chronik.postgres.ExposedTimerStore
-import ru.workinprogress.chronik.postgres.TimersTable
+import io.github.youndie.chronik.ChronikClock
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.TimerSink
+import io.github.youndie.chronik.TimerState
+import io.github.youndie.chronik.TimerWorker
+import io.github.youndie.chronik.postgres.ExposedTimerStore
+import io.github.youndie.chronik.postgres.TimersTable
 import kotlin.system.measureNanoTime
 
 /**

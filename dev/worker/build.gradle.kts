@@ -11,5 +11,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("ru.workinprogress.chronik.dev.MainKt")
+    mainClass.set("io.github.youndie.chronik.dev.MainKt")
 }

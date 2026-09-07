@@ -1,11 +1,11 @@
-package ru.workinprogress.chronik.conformance
+package io.github.youndie.chronik.conformance
 
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.Timer
+import io.github.youndie.chronik.TimerState
+import io.github.youndie.chronik.TimerTransaction
+import io.github.youndie.chronik.TransactionalTimerStore
 import kotlinx.coroutines.test.runTest
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.Timer
-import ru.workinprogress.chronik.TimerState
-import ru.workinprogress.chronik.TimerTransaction
-import ru.workinprogress.chronik.TransactionalTimerStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

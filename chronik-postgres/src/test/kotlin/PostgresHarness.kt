@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik.postgres
+package io.github.youndie.chronik.postgres
 
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils

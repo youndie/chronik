@@ -1,5 +1,9 @@
-package ru.workinprogress.chronik.postgres
+package io.github.youndie.chronik.postgres
 
+import io.github.youndie.chronik.Chronik
+import io.github.youndie.chronik.ChronikClock
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.TimerState
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
@@ -8,10 +12,6 @@ import org.jetbrains.exposed.v1.core.vendors.ForUpdateOption
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import ru.workinprogress.chronik.Chronik
-import ru.workinprogress.chronik.ChronikClock
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.TimerState
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread

@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik
+package io.github.youndie.chronik
 
 /**
  * The model the oracle runs against: a store with a transaction that can be committed, rolled back,
