@@ -1,9 +1,8 @@
 # chronik
 
 [![kotlin](https://img.shields.io/badge/Kotlin-2.4.10-blue?logo=kotlin&logoColor=white)](https://kotlinlang.org)
-[![chronik-core](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-core?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-core)
-[![chronik-postgres](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-postgres?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-postgres)
-[![chronik-conformance](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-conformance?name=snapshots&color=40c14a&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-conformance)
+[![maven central](https://img.shields.io/maven-central/v/io.github.youndie/chronik-core?label=maven%20central&color=40c14a)](https://central.sonatype.com/artifact/io.github.youndie/chronik-core)
+[![snapshots](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-core?name=snapshots&color=blue&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-core)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **a durable timer for Kotlin, and nothing else** — `schedule(id, at, payload)`, and at `at` (or
@@ -30,14 +29,18 @@ chronik writes the timer **in the caller's transaction**, so the two commit toge
 
 ```kotlin
 repositories {
-    maven("https://reposilite.kotlin.website/snapshots")
+    mavenCentral()
 }
 
 dependencies {
-    implementation("io.github.youndie:chronik-core:0.1.0.4")
-    implementation("io.github.youndie:chronik-postgres:0.1.0.4")
+    implementation("io.github.youndie:chronik-core:0.1.0")
+    implementation("io.github.youndie:chronik-postgres:0.1.0")
 }
 ```
+
+Releases are on Maven Central. Snapshots keep going to
+`https://reposilite.kotlin.website/snapshots` as `0.1.0.<build>`, which is where to look for
+something merged but not released — add that repository beside `mavenCentral()` to take one.
 
 `chronik-postgres` ships no driver, no connection pool and no DDL: it takes an Exposed `Database`
 you hand it, and the table describes itself — indexes included — so a schema generator produces
