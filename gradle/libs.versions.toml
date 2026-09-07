@@ -8,7 +8,7 @@ kotlinx-coroutines = "1.11.0"
 # answers a different question every few months.
 postgres-driver = "42.7.13"
 testcontainers = "2.0.5"
-hikari = "7.0.2"
+hikari = "7.1.0"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
