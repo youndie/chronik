@@ -8,7 +8,7 @@ owner: unassigned
 depends_on:
   - chronik-postgres
 publishes:
-  - "io.github.youndie:chronik-core"
+  - "io.github.youndie.chronik:chronik-core"
 ---
 
 # chronik-core
