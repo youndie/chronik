@@ -1,11 +1,11 @@
 package io.github.youndie.chronik.postgres
 
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import io.github.youndie.chronik.TimerTransaction
 import io.github.youndie.chronik.conformance.ConformanceKit
 import io.github.youndie.chronik.conformance.TimerStoreSubject
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

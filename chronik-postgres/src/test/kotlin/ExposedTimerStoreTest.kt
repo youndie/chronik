@@ -1,11 +1,11 @@
 package io.github.youndie.chronik.postgres
 
-import kotlinx.coroutines.test.runTest
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import io.github.youndie.chronik.Chronik
 import io.github.youndie.chronik.ChronikClock
 import io.github.youndie.chronik.EpochSeconds
 import io.github.youndie.chronik.TimerState
+import kotlinx.coroutines.test.runTest
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
