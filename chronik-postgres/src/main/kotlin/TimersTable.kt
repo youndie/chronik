@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik.postgres
+package io.github.youndie.chronik.postgres
 
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table

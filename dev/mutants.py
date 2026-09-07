@@ -176,7 +176,7 @@ def failing_tests(task):
     for path in glob.glob(pattern):
         root = ET.parse(path).getroot()
         if int(root.get("failures", 0)) or int(root.get("errors", 0)):
-            # "OracleTest[jvm]" and "ru.workinprogress.chronik.postgres.SkipLockedTest" both reduce
+            # "OracleTest[jvm]" and "io.github.youndie.chronik.postgres.SkipLockedTest" both reduce
             # to the class name, which is what the table names.
             names.add(root.get("name").split("[")[0].split(".")[-1])
     return names

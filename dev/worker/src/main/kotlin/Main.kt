@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik.dev
+package io.github.youndie.chronik.dev
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -9,14 +9,14 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import ru.workinprogress.chronik.Chronik
-import ru.workinprogress.chronik.ChronikClock
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.TimerSink
-import ru.workinprogress.chronik.TimerWorker
-import ru.workinprogress.chronik.postgres.ExposedTimerStore
-import ru.workinprogress.chronik.postgres.TimersTable
-import ru.workinprogress.chronik.postgres.asTimerTransaction
+import io.github.youndie.chronik.Chronik
+import io.github.youndie.chronik.ChronikClock
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.TimerSink
+import io.github.youndie.chronik.TimerWorker
+import io.github.youndie.chronik.postgres.ExposedTimerStore
+import io.github.youndie.chronik.postgres.TimersTable
+import io.github.youndie.chronik.postgres.asTimerTransaction
 
 /**
  * Append-only, and that is the whole measuring instrument.

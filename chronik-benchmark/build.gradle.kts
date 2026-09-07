@@ -16,5 +16,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("ru.workinprogress.chronik.benchmark.MainKt")
+    mainClass.set("io.github.youndie.chronik.benchmark.MainKt")
 }

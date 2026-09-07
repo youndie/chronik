@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik
+package io.github.youndie.chronik
 
 import kotlinx.coroutines.test.runTest
 import kotlin.random.Random

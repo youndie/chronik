@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik
+package io.github.youndie.chronik
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

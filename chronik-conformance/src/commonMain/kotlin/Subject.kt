@@ -1,7 +1,7 @@
-package ru.workinprogress.chronik.conformance
+package io.github.youndie.chronik.conformance
 
-import ru.workinprogress.chronik.TimerTransaction
-import ru.workinprogress.chronik.TransactionalTimerStore
+import io.github.youndie.chronik.TimerTransaction
+import io.github.youndie.chronik.TransactionalTimerStore
 
 /**
  * A storage implementation, plus the two things the corpus cannot do for itself: run a transaction

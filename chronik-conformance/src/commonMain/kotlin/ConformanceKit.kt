@@ -1,8 +1,8 @@
-package ru.workinprogress.chronik.conformance
+package io.github.youndie.chronik.conformance
 
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.Timer
-import ru.workinprogress.chronik.TimerState
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.Timer
+import io.github.youndie.chronik.TimerState
 
 /**
  * Every rule a storage implementation has to satisfy, as cases that can be run against it.

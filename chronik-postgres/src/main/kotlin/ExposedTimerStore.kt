@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik.postgres
+package io.github.youndie.chronik.postgres
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,11 +18,11 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import org.jetbrains.exposed.v1.jdbc.update
-import ru.workinprogress.chronik.EpochSeconds
-import ru.workinprogress.chronik.Timer
-import ru.workinprogress.chronik.TimerState
-import ru.workinprogress.chronik.TimerTransaction
-import ru.workinprogress.chronik.TransactionalTimerStore
+import io.github.youndie.chronik.EpochSeconds
+import io.github.youndie.chronik.Timer
+import io.github.youndie.chronik.TimerState
+import io.github.youndie.chronik.TimerTransaction
+import io.github.youndie.chronik.TransactionalTimerStore
 
 /**
  * The caller's Exposed transaction, wrapped so it can be handed to chronik.

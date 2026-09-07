@@ -1,4 +1,4 @@
-package ru.workinprogress.chronik
+package io.github.youndie.chronik
 
 /**
  * A point in time, in whole seconds since the Unix epoch.
