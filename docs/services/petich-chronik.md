@@ -9,7 +9,7 @@ owner: unassigned
 depends_on:
   - chronik-core
 publishes:
-  - "io.github.youndie:petich-chronik"
+  - "io.github.youndie.petich:petich-chronik"
 ---
 
 # petich-chronik

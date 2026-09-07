@@ -9,7 +9,7 @@ depends_on:
   - chronik-core
   - PostgreSQL
 publishes:
-  - "io.github.youndie:chronik-postgres"
+  - "io.github.youndie.chronik:chronik-postgres"
 ---
 
 # chronik-postgres

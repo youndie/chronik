@@ -50,7 +50,7 @@ jobs:
           # consumer build per coordinate — which is what makes an `implementation` that should have
           # been `api` distinguishable from one that is correct.
           coordinate: |
-            io.github.youndie:chronik-core:${{ needs.publish.outputs.version }}
-            io.github.youndie:chronik-postgres:${{ needs.publish.outputs.version }}
-            io.github.youndie:chronik-conformance:${{ needs.publish.outputs.version }}
+            io.github.youndie.chronik:chronik-core:${{ needs.publish.outputs.version }}
+            io.github.youndie.chronik:chronik-postgres:${{ needs.publish.outputs.version }}
+            io.github.youndie.chronik:chronik-conformance:${{ needs.publish.outputs.version }}
           repository: https://reposilite.kotlin.website/snapshots

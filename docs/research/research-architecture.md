@@ -32,7 +32,7 @@ chronik — долговечный таймер и только он. `schedule(
 
 | Факт | Где проверено |
 |---|---|
-| Модуль `petich-scheduler` существует и опубликован как `io.github.youndie:petich-scheduler` | `petich/settings.gradle.kts`, `petich/README.md` — таблица модулей |
+| Модуль `petich-scheduler` существует и опубликован как `io.github.youndie.petich:petich-scheduler` | `petich/settings.gradle.kts`, `petich/README.md` — таблица модулей |
 | Он **исполняет** задачу сам: `ScheduledJobRunner.run(job)` вызывается воркером внутри `tick()` | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
 | Выборка «что пора» — обычный `findDue(now, limit)`, без блокировки строк и без lease | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
 | Двойное срабатывание допущено сознательно: при провале записи нового состояния следующий проход снова видит задачу как due | комментарий в `tick()`, ветка `catch` вокруг `repository.save` |

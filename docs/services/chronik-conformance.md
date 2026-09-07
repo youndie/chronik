@@ -8,7 +8,7 @@ owner: unassigned
 depends_on:
   - chronik-core
 publishes:
-  - "io.github.youndie:chronik-conformance"
+  - "io.github.youndie.chronik:chronik-conformance"
 ---
 
 # chronik-conformance

@@ -27,7 +27,7 @@ workflow заведён по образцу соседей — со **вторы
 читать зелёные проверки рядом. Поэтому триггер тогда был **закомментирован, а не удалён**: вернуть
 — одна строка, и видно, что это и есть желаемое состояние.
 
-- AC: `io.github.youndie:chronik-core:<версия>` резолвится из `https://reposilite.kotlin.website/snapshots`
+- AC: `io.github.youndie.chronik:chronik-core:<версия>` резолвится из `https://reposilite.kotlin.website/snapshots`
   сторонней сборкой, а не только `./gradlew publishToMavenLocal`. Проверяет это второй job
   workflow'а — он читает опубликованное как потребитель, а не смотрит в каталог сборки.
 - AC: `main` зелёный, и триггер `push` у публикации возвращён.
