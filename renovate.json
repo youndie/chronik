@@ -1,35 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":dependencyDashboard"
+  "description": [
+    "The portfolio's shared configuration, extended by name. It replaces three rules that were written here: `sborka conventions`, `kotlin toolchain` and `kotlinx`. The preset's sborka rule is the same rule with one addition — it names `io.github.youndie.sborka` as well as `ru.workinprogress.sborka`, because the plugin ids are moving and a rule naming one of them stops matching on the day this repository migrates, which would bring back exactly the quiet split the rule exists to prevent.",
+    "The Monday batch moves from 9am to 6am with the rest of the portfolio; nothing depended on the hour.",
+    "Automerge is a separate preset (`github>youndie/sborka:automerge-harness`) and is not extended: nothing merges itself here today. Its precondition holds — check.yaml runs on `pull_request` — so it can be added as its own change."
   ],
-  "schedule": ["before 9am on monday"],
-  "prConcurrentLimit": 5,
+  "extends": ["github>youndie/sborka"],
   "packageRules": [
-    {
-      "description": "The shared conventions are pinned in TWO files — the catalogue and the settings plugin — and a repository holding one at a version the other does not is exactly the split that breaks quietly: the plugins load, the build configures, and one half of the contract is a release behind. Grouping them is what keeps the pair moving as a pair.",
-      "groupName": "sborka conventions",
-      "matchPackageNames": ["ru.workinprogress.sborka{/,}**"]
-    },
-    {
-      "description": "Kotlin and its plugins are built against a specific compiler version; a mismatched pair fails the build rather than reporting a version problem.",
-      "groupName": "kotlin toolchain",
-      "matchPackageNames": [
-        "org.jetbrains.kotlin:{/,}**",
-        "org.jetbrains.kotlin.jvm",
-        "org.jetbrains.kotlin.multiplatform"
-      ]
-    },
     {
       "description": "Exposed core and jdbc go in as a single version.",
       "groupName": "exposed",
       "matchPackageNames": ["org.jetbrains.exposed:{/,}**"]
-    },
-    {
-      "description": "kotlinx libraries move independently of each other but are noisy one PR at a time.",
-      "groupName": "kotlinx",
-      "matchPackageNames": ["org.jetbrains.kotlinx:{/,}**"]
     },
     {
       "description": "Testcontainers and the Postgres driver are used by nothing but the tests, and verifying either means the same thing: bring up a container and run the suite against it. One PR is one such run instead of two.",
@@ -40,7 +21,7 @@
       ]
     },
     {
-      "description": "Major updates get their own PR: they cannot be merged without looking. The move from sborka 0.1.x to 0.2.x brought two new lint rules that found six real holes — worth reading, not worth merging blind.",
+      "description": "Major updates get their own PR: they cannot be merged without looking. The move from sborka 0.1.x to 0.2.x brought two new lint rules that found six real holes — worth reading, not worth merging blind. Stricter than the preset, which labels majors and leaves them open; here they wait on the dashboard until somebody asks for the branch.",
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }
