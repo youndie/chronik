@@ -39,7 +39,11 @@ class ExposedTimerStoreTest {
             // objects to a discarded Result, which is the same defect this comment is about.
             var writtenInside = -1
 
-            @Suppress("SwallowedResult") // the throw IS the mechanism: it abandons the transaction
+            @Suppress(
+                "SwallowedResult",
+                "ktlint:kapkan:cancellation-swallowed",
+                "the throw IS the mechanism here, and nothing cancels a test scope",
+            )
             val ignored =
                 runCatching {
                     transaction(db) {

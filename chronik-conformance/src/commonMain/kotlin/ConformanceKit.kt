@@ -3,6 +3,7 @@ package io.github.youndie.chronik.conformance
 import io.github.youndie.chronik.EpochSeconds
 import io.github.youndie.chronik.Timer
 import io.github.youndie.chronik.TimerState
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Every rule a storage implementation has to satisfy, as cases that can be run against it.
@@ -40,6 +41,11 @@ public class ConformanceKit {
             val detail =
                 try {
                     case.check(subject)
+                } catch (e: CancellationException) {
+                    // A cancelled run is not a subject that threw. Recording it as one would be the
+                    // kit reporting a conformance failure against an implementation that was never
+                    // asked to finish -- the same lying this catch exists to prevent.
+                    throw e
                 } catch (e: Throwable) {
                     "the implementation threw: ${e::class.simpleName}: ${e.message}"
                 }

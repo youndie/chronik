@@ -33,7 +33,11 @@ class PostgresConformanceTest {
                 // that uses this is itself proven able to fail, by a subject that commits what it
                 // was asked to abandon (KitCatchesViolationsTest). That guard is why this one does
                 // not need to record anything.
-                @Suppress("SwallowedResult")
+                @Suppress(
+                    "SwallowedResult",
+                    "ktlint:kapkan:cancellation-swallowed",
+                    "the throw IS the mechanism here, and nothing cancels a test scope",
+                )
                 val ignored =
                     runCatching {
                         transaction(db) {
