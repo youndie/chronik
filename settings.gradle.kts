@@ -27,7 +27,7 @@ plugins {
     // Taking these rather than hand-rolling was decided by finding, an hour after writing one by
     // hand, that the shared version already carried the same defect and its fix: a `kotlin("jvm")`
     // module whose publish task reports success and uploads nothing.
-    id("io.github.youndie.sborka.settings") version "0.3.0.41"
+    id("io.github.youndie.sborka.settings") version "0.4.0.43"
 }
 
 // The primitive: the three operations, the contracts of storage and of the sink, the worker.
