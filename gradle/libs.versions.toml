@@ -1,7 +1,7 @@
 [versions]
 # The shared build conventions. One number: every sborka plugin below takes its version from here.
 sborka = "0.4.0.43"
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 exposed = "1.4.0"
 kotlinx-coroutines = "1.11.0"
 # Pinned to a major rather than latest: a test stand that silently changes its DBMS version
