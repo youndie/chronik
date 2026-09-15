@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 import io.github.youndie.chronik.TimerTransaction
 import io.github.youndie.chronik.conformance.ConformanceKit
@@ -20,12 +20,12 @@ import kotlin.test.assertTrue
  * sake — sqlx4k is two different drivers behind one API, and the neighbouring repository that
  * assumed otherwise found three behavioural differences between them.
  */
-class Sqlx4kConformanceTest {
+class SqliteConformanceTest {
     private val db = SqliteHarness.open("conformance")
 
     private val subject =
         object : TimerStoreSubject {
-            override val store = Sqlx4kTimerStore(db)
+            override val store = SqliteTimerStore(db)
 
             override suspend fun committed(body: suspend (TimerTransaction) -> Unit) {
                 db.transaction { body(asTimerTransaction()) }

@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 import io.github.smyrgeorge.sqlx4k.ConnectionPool
 import io.github.smyrgeorge.sqlx4k.Driver

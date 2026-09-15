@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 /**
  * The statements that create the timers table, as text the application runs itself.

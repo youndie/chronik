@@ -79,7 +79,7 @@ publishes:
 
 | Вид | Имя | Зачем |
 |---|---|---|
-| База | PostgreSQL | бэкенд для JVM; второй — [chronik-sqlx4k](chronik-sqlx4k.md) на SQLite (D2) |
+| База | PostgreSQL | бэкенд для JVM; второй — [chronik-sqlx4k-sqlite](chronik-sqlx4k-sqlite.md) на SQLite (D2) |
 | Библиотека | Exposed (`exposed-core`, `exposed-jdbc`) | SQL и `ForUpdateOption` |
 | Модуль | [chronik-core](chronik-core.md) | контракты, которые здесь реализуются |
 

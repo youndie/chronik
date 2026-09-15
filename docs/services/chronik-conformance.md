@@ -32,7 +32,7 @@ publishes:
 `jvm()` и `linuxX64()`, тот же список, что у [chronik-core](chronik-core.md)
 ([B-16](../backlog/B-16-linux-native-target.md)). Это не симметрия ради симметрии: корпус
 существует ради второй реализации, а вторая реализация —
-[chronik-sqlx4k](chronik-sqlx4k.md) — работает на Kotlin/Native, и корпус, останавливающийся на
+[chronik-sqlx4k-sqlite](chronik-sqlx4k-sqlite.md) — работает на Kotlin/Native, и корпус, останавливающийся на
 JVM, нечем к ней приложить. С 15.09.2026 это уже не довод, а факт: корпус гоняется на обоих
 таргетах и **ловит** там подменённую реализацию (положительный контроль в
 [B-17](../backlog/B-17-sqlx4k-sqlite-store.md)).
@@ -50,7 +50,7 @@ JVM, нечем к ней приложить. С 15.09.2026 это уже не �
 | `chronik-conformance/src/commonMain/kotlin/Subject.kt` | что реализация обязана предоставить сверх хранилища: коммит и отказ от транзакции |
 | `chronik-conformance/src/commonTest/kotlin/KitCatchesViolationsTest.kt` | сторож холостой проверки — по декоратору на случай |
 | `chronik-postgres/src/test/kotlin/PostgresConformanceTest.kt` | корпус против Postgres |
-| `chronik-sqlx4k/src/commonTest/kotlin/Sqlx4kConformanceTest.kt` | тот же корпус против SQLite, на обоих таргетах |
+| `chronik-sqlx4k-sqlite/src/commonTest/kotlin/SqliteConformanceTest.kt` | тот же корпус против SQLite, на обоих таргетах |
 
 | Репозиторий | Код | Что взято |
 |---|---|---|

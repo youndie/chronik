@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 import io.github.smyrgeorge.sqlx4k.Driver
 import io.github.smyrgeorge.sqlx4k.QueryExecutor
@@ -52,7 +52,7 @@ public fun Transaction.asTimerTransaction(): TimerTransaction = Sqlx4kTimerTrans
  * `SELECT ... FOR UPDATE SKIP LOCKED`, and no advisory locking anywhere. That difference is not a
  * shortcut — see [claimDue].
  */
-public class Sqlx4kTimerStore(
+public class SqliteTimerStore(
     private val db: Driver,
     private val table: String = DEFAULT_TABLE,
 ) : TransactionalTimerStore {

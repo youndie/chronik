@@ -1,17 +1,17 @@
 ---
-id: chronik-sqlx4k
-title: chronik-sqlx4k — таймеры на SQLite через sqlx4k
+id: chronik-sqlx4k-sqlite
+title: chronik-sqlx4k-sqlite — таймеры на SQLite через sqlx4k
 type: service
-module: chronik-sqlx4k
+module: chronik-sqlx4k-sqlite
 tech_stack: [Kotlin Multiplatform, sqlx4k, SQLite]
 owner: unassigned
 depends_on:
   - chronik-core
 publishes:
-  - "io.github.youndie.chronik:chronik-sqlx4k"
+  - "io.github.youndie.chronik:chronik-sqlx4k-sqlite"
 ---
 
-# chronik-sqlx4k
+# chronik-sqlx4k-sqlite
 
 > **Модуль существует** ([B-17](../backlog/B-17-sqlx4k-sqlite-store.md), закрыт): хранилище,
 > корпус соответствия на обоих таргетах, проба настоящим потребителем на Kotlin/Native.
@@ -29,6 +29,11 @@ publishes:
   прогоняет её приложение своим же раннером и со своей нумерацией версий;
 - не знает, где лежит файл базы, сколько там соединений и кто ещё в неё пишет.
 
+**Имя модуля называет и библиотеку, и диалект**, потому что это два независимых выбора
+потребителя. И модуль на драйвер — не вкус: нативный бинарь, слинковавший два драйвера sqlx4k, не
+линкуется вовсе, поэтому `chronik-sqlx4k-postgres` рядом был бы отдельным артефактом при любом
+устройстве кода.
+
 ## 1a. Таргеты
 
 `jvm()` и `linuxX64()`. JVM-половина существует не ради потребителя (на JVM есть
@@ -38,7 +43,7 @@ Kotlin/Native и Xerial sqlite-jdbc на JVM, и они расходятся в 
 
 ## 2. Контракты
 
-* **Публичный API:** `chronik-sqlx4k/src/commonMain/kotlin/` — `Sqlx4kTimerStore`,
+* **Публичный API:** `chronik-sqlx4k-sqlite/src/commonMain/kotlin/` — `SqliteTimerStore`,
   `Transaction.asTimerTransaction()`, `chronikTimersSchema()`
 * **Транзакция приходит ручкой, а не из контекста.** sqlx4k умеет носить текущую транзакцию в
   `CoroutineContext`, и именно поэтому ручка нужна: на неявном состоянии вопрос «я внутри
@@ -48,11 +53,11 @@ Kotlin/Native и Xerial sqlite-jdbc на JVM, и они расходятся в 
 
 | Файл | Что там |
 |---|---|
-| `chronik-sqlx4k/src/commonMain/kotlin/Sqlx4kTimerStore.kt` | хранилище целиком: восемь операций, весь SQL |
-| `chronik-sqlx4k/src/commonMain/kotlin/Schema.kt` | DDL как текст + проверка имени таблицы |
-| `chronik-sqlx4k/src/commonTest/kotlin/Sqlx4kConformanceTest.kt` | корпус из [B-12](../backlog/B-12-conformance-kit.md) против этого бэкенда |
-| `chronik-sqlx4k/src/commonTest/kotlin/ClaimIsAtomicTest.kt` | четыре воркера, двадцать таймеров, ни одного дважды |
-| `chronik-sqlx4k/src/commonTest/kotlin/SqliteHarness.kt` | файловая база во временном каталоге, пул на два |
+| `chronik-sqlx4k-sqlite/src/commonMain/kotlin/SqliteTimerStore.kt` | хранилище целиком: восемь операций, весь SQL |
+| `chronik-sqlx4k-sqlite/src/commonMain/kotlin/Schema.kt` | DDL как текст + проверка имени таблицы |
+| `chronik-sqlx4k-sqlite/src/commonTest/kotlin/SqliteConformanceTest.kt` | корпус из [B-12](../backlog/B-12-conformance-kit.md) против этого бэкенда |
+| `chronik-sqlx4k-sqlite/src/commonTest/kotlin/ClaimIsAtomicTest.kt` | четыре воркера, двадцать таймеров, ни одного дважды |
+| `chronik-sqlx4k-sqlite/src/commonTest/kotlin/SqliteHarness.kt` | файловая база во временном каталоге, пул на два |
 
 | Репозиторий | Код | Что взято |
 |---|---|---|
@@ -105,7 +110,7 @@ SQLite писатель в каждый момент один, поэтому о
 ## 6. Локальный прогон
 
 ```bash
-./gradlew :chronik-sqlx4k:jvmTest :chronik-sqlx4k:linuxX64Test
+./gradlew :chronik-sqlx4k-sqlite:jvmTest :chronik-sqlx4k-sqlite:linuxX64Test
 ```
 
 Docker не нужен: база — файл во временном каталоге. Это отличие от `chronik-postgres`, чей прогон

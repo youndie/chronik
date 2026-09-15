@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 import io.github.youndie.chronik.EpochSeconds
 import io.github.youndie.chronik.Timer
@@ -30,7 +30,7 @@ class PayloadAndTableTest {
     fun `a payload with quotes and a comment marker survives the round trip`() =
         runTest {
             db.createTimers()
-            val store = Sqlx4kTimerStore(db)
+            val store = SqliteTimerStore(db)
             val payload = """{"note":"it's 'quoted', -- and it isn't a comment","semi":";"}"""
 
             db.transaction {
@@ -45,7 +45,7 @@ class PayloadAndTableTest {
     fun `a claimed timer carries the payload it was written with`() =
         runTest {
             db.createTimers(TABLE)
-            val store = Sqlx4kTimerStore(db, TABLE)
+            val store = SqliteTimerStore(db, TABLE)
             val payload = "don't '; DROP TABLE $TABLE; --"
 
             db.transaction {
@@ -64,7 +64,7 @@ class PayloadAndTableTest {
      */
     @Test
     fun `a table name that is not a plain identifier is refused`() {
-        assertFailsWith<IllegalArgumentException> { Sqlx4kTimerStore(db, "timers; DROP TABLE x") }
+        assertFailsWith<IllegalArgumentException> { SqliteTimerStore(db, "timers; DROP TABLE x") }
         assertFailsWith<IllegalArgumentException> { chronikTimersSchema("\"timers\"") }
         assertFailsWith<IllegalArgumentException> { chronikTimersSchema("") }
     }

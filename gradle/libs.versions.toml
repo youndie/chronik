@@ -28,7 +28,7 @@ hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
 
 # The database-agnostic half of sqlx4k: `Driver`, `Transaction`, `Statement`, `ResultSet`. NOT a
-# driver — see chronik-sqlx4k/build.gradle.kts for why the store depends on this and not on
+# driver — see chronik-sqlx4k-sqlite/build.gradle.kts for why the store depends on this and not on
 # `sqlx4k-sqlite`.
 sqlx4k-core = { module = "io.github.smyrgeorge:sqlx4k", version.ref = "sqlx4k" }
 sqlx4k-sqlite = { module = "io.github.smyrgeorge:sqlx4k-sqlite", version.ref = "sqlx4k" }

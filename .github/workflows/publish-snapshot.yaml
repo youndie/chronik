@@ -51,12 +51,12 @@ jobs:
           # been `api` distinguishable from one that is correct.
           #
           # This list is written by hand beside a set that grows, so it is the kind of list that
-          # silently stops being complete: `chronik-sqlx4k` was added to it in the same commit that
+          # silently stops being complete: `chronik-sqlx4k-sqlite` was added to it in the same commit that
           # added the module. The consumer build here is a JVM one, so what it checks of a
           # multiplatform module is the jvm variant.
           coordinate: |
             io.github.youndie.chronik:chronik-core:${{ needs.publish.outputs.version }}
             io.github.youndie.chronik:chronik-postgres:${{ needs.publish.outputs.version }}
-            io.github.youndie.chronik:chronik-sqlx4k:${{ needs.publish.outputs.version }}
+            io.github.youndie.chronik:chronik-sqlx4k-sqlite:${{ needs.publish.outputs.version }}
             io.github.youndie.chronik:chronik-conformance:${{ needs.publish.outputs.version }}
           repository: https://reposilite.kotlin.website/snapshots

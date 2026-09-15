@@ -1,4 +1,4 @@
-package io.github.youndie.chronik.sqlx4k
+package io.github.youndie.chronik.sqlx4k.sqlite
 
 import io.github.youndie.chronik.EpochSeconds
 import io.github.youndie.chronik.Timer
@@ -25,7 +25,7 @@ import kotlin.test.assertEquals
  */
 class ClaimIsAtomicTest {
     private val db = SqliteHarness.open("claim-atomic")
-    private val store = Sqlx4kTimerStore(db)
+    private val store = SqliteTimerStore(db)
 
     @Test
     fun `competing workers never claim the same timer twice`() =

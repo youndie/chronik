@@ -27,14 +27,14 @@ stage: stage-3-numbers
 
 - AC: корпус соответствия зелёный против SQLite-хранилища **на обоих таргетах**; потребитель на
   Kotlin/Native планирует таймер в своей транзакции и забирает его в срок.
-- Anchors: `chronik-sqlx4k/build.gradle.kts`,
-  `chronik-sqlx4k/src/commonMain/kotlin/Sqlx4kTimerStore.kt`,
-  `chronik-sqlx4k/src/commonMain/kotlin/Schema.kt`
+- Anchors: `chronik-sqlx4k-sqlite/build.gradle.kts`,
+  `chronik-sqlx4k-sqlite/src/commonMain/kotlin/SqliteTimerStore.kt`,
+  `chronik-sqlx4k-sqlite/src/commonMain/kotlin/Schema.kt`
 
 ## Закрыт 15.09.2026
 
 Пять тестов на каждом таргете: корпус (17 случаев), атомарность claim'а, два теста на значения и
-имя таблицы. Подробности устройства — в [chronik-sqlx4k](../services/chronik-sqlx4k.md).
+имя таблицы. Подробности устройства — в [chronik-sqlx4k-sqlite](../services/chronik-sqlx4k-sqlite.md).
 
 **Оба зелёных результата проверены положительным контролем, потому что оба прошли с первого раза.**
 
@@ -49,12 +49,14 @@ Postgres запрещает `SKIP LOCKED`. Тест упал на обоих т�
 корпус гоняет одного воркера за раз.
 
 **Проверено настоящим потребителем.** Локальная публикация, рядом отдельный проект на `linuxX64`,
-который берёт `chronik-sqlx4k` из `mavenLocal` и **свой** `sqlx4k-sqlite`: схема прогнана,
+который берёт `chronik-sqlx4k-sqlite` из `mavenLocal` и **свой** `sqlx4k-sqlite`: схема прогнана,
 `chronik.schedule` вызван внутри `db.transaction { }`, за секунду до срока claim пуст, в срок —
 один таймер, после `markFired` — снова пуст. Это же снимает вопрос о двух Rust-рантаймах: драйвер
 в сборке один, потребительский.
 
-**Имя координаты стоит пересмотреть до публикации.** Модуль называется по библиотеке
-(`chronik-sqlx4k`), а несёт SQLite: если появится Postgres через sqlx4k, рядом встанет
-`chronik-sqlx4k-postgres`, и первое имя начнёт врать. Переименование сегодня — строка в
-`settings.gradle.kts`; после выпуска — нет.
+**Имя пересмотрено до публикации, и это было последнее окно.** Первая версия называлась
+`chronik-sqlx4k` — по библиотеке — и несла SQLite: появись рядом Postgres через sqlx4k, имя начало
+бы врать. Переименовано в `chronik-sqlx4k-sqlite` (владельцем, до выпуска): координата, каталог,
+пакет `io.github.youndie.chronik.sqlx4k.sqlite` и тип `SqliteTimerStore`, чей SQL диалектный.
+`Sqlx4kTimerTransaction` и `Transaction.asTimerTransaction()` имя сохранили: они оборачивают
+транзакцию sqlx4k и диалекта не знают.

@@ -107,7 +107,7 @@ python3 scripts/code_anchors.py --repos ..
   приёмника, воркер; SQL не знает
 - [x] [chronik-postgres](services/chronik-postgres.md) — бэкенд для JVM: выборка `SKIP LOCKED`,
   аренда колонкой, таблица без DDL
-- [x] [chronik-sqlx4k](services/chronik-sqlx4k.md) — второй бэкенд: SQLite через sqlx4k, там где
+- [x] [chronik-sqlx4k-sqlite](services/chronik-sqlx4k-sqlite.md) — второй бэкенд: SQLite через sqlx4k, там где
   нет JVM; claim одним оператором, драйвер приходит снаружи
 - [x] [chronik-conformance](services/chronik-conformance.md) — корпус случаев, гоняемый против
   любой реализации хранилища
