@@ -32,6 +32,20 @@ publishes:
 - не знает бизнес-типов: payload — уже сериализованная строка, как `OutboxRecord` у соседа;
 - не имеет календаря и таймзон (D5), не догоняет пропущенные периоды (D6).
 
+## 1a. Таргеты
+
+`jvm()` и `linuxX64()` ([B-16](../backlog/B-16-linux-native-target.md), закрыт). Весь код модуля
+лежит в `commonMain`, поэтому второй таргет — строка в `chronik-core/build.gradle.kts`, а не порт.
+
+Список таргетов — решение этого репозитория, а не общих конвенций: `sborka.kmp` даёт механику
+KMP-библиотеки и намеренно не назначает платформы. Apple- и mingw-таргетов нет, потому что
+нативный потребитель, ради которого заводился `linuxX64`, — сервер; добавить ещё один стоит
+строки.
+
+`linuxX64Test` входит в `check`, и это существенно: без него правка в `commonMain`, законная на
+JVM и незаконная на Native (запятая в имени теста, `kotlin.jvm.*` без импорта), уезжает в релиз
+и падает у потребителя.
+
 ## 2. Контракты
 
 * **Публичный API:** `chronik-core/src/commonMain/kotlin/` — три операции, `TimerSink`, `TimerStore`
@@ -43,7 +57,7 @@ publishes:
 
 | Файл | Что там | Есть? |
 |---|---|---|
-| `chronik-core/src/commonMain/kotlin/EpochSeconds.kt` | `EpochSeconds` и `ChronikClock` | да |
+| `chronik-core/src/commonMain/kotlin/EpochSeconds.kt` | `EpochSeconds` и `ChronikClock`; `import kotlin.jvm.JvmInline` — явный, потому что на Native он не по умолчанию | да |
 | `chronik-core/src/commonMain/kotlin/Timer.kt` | строка таймера, состояния, `isClaimableAt`, `latenessAt` | да |
 | `chronik-core/src/commonMain/kotlin/TimerStore.kt` | `TimerStore` и `TransactionalTimerStore` | да |
 | `chronik-core/src/commonMain/kotlin/TimerSink.kt` | `TimerSink`, `FiredTimer` | да |

@@ -42,6 +42,11 @@ Releases are on Maven Central. Snapshots keep going to
 `https://reposilite.kotlin.website/snapshots` as `0.1.0.<build>`, which is where to look for
 something merged but not released — add that repository beside `mavenCentral()` to take one.
 
+`chronik-core` and `chronik-conformance` are built for the JVM and for `linuxX64`, so a
+Kotlin/Native service can take the primitive and the conformance corpus. `chronik-postgres` is the
+JVM only — it is Exposed and JDBC — so a native service brings its own backend and checks it with
+the same corpus.
+
 `chronik-postgres` ships no driver, no connection pool and no DDL: it takes an Exposed `Database`
 you hand it, and the table describes itself — indexes included — so a schema generator produces
 something that matches what the queries actually filter on.

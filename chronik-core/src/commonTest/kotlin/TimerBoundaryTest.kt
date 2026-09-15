@@ -31,7 +31,7 @@ class TimerBoundaryTest {
     }
 
     @Test
-    fun `a live lease hides it, an expired one does not`() {
+    fun `a live lease hides it and an expired one does not`() {
         val held = timer.copy(lockedUntil = EpochSeconds(200), lockedBy = "worker-0")
 
         assertFalse(held.isClaimableAt(EpochSeconds(150)))
@@ -41,7 +41,7 @@ class TimerBoundaryTest {
     }
 
     @Test
-    fun `a terminal timer is never claimable, however far past its due time`() {
+    fun `a terminal timer is never claimable however far past its due time`() {
         for (state in listOf(TimerState.FIRED, TimerState.CANCELLED, TimerState.DEAD_LETTERED)) {
             assertFalse(timer.copy(state = state).isClaimableAt(EpochSeconds(10_000)), "$state")
         }
