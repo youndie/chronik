@@ -8,7 +8,7 @@ kotlinx-coroutines = "1.11.0"
 # answers a different question every few months.
 postgres-driver = "42.7.13"
 testcontainers = "2.0.5"
-hikari = "7.0.2"
+hikari = "7.1.0"
 # The Kotlin/Native-capable driver. Pinned like the rest: it carries a Rust runtime, and a stand
 # that changes its driver silently answers a different question every few months.
 sqlx4k = "1.13.1"
