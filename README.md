@@ -42,10 +42,18 @@ Releases are on Maven Central. Snapshots keep going to
 `https://reposilite.kotlin.website/snapshots` as `0.1.0.<build>`, which is where to look for
 something merged but not released — add that repository beside `mavenCentral()` to take one.
 
-`chronik-core` and `chronik-conformance` are built for the JVM and for `linuxX64`, so a
-Kotlin/Native service can take the primitive and the conformance corpus. `chronik-postgres` is the
-JVM only — it is Exposed and JDBC — so a native service brings its own backend and checks it with
-the same corpus.
+Two backends, and which one you can use depends on where you run. `chronik-postgres` is the JVM
+only — it is Exposed and JDBC. `chronik-sqlx4k` is SQLite through sqlx4k and is built for the JVM
+and for `linuxX64`, as are `chronik-core` and `chronik-conformance`, so a Kotlin/Native service has
+a store rather than only a primitive.
+
+```kotlin
+// a Kotlin/Native service, on the driver it already opened
+implementation("io.github.youndie.chronik:chronik-sqlx4k:0.1.0")
+```
+
+`chronik-sqlx4k` carries no driver: it takes the sqlx4k `Driver` your application opened, and states
+the schema it needs (`chronikTimersSchema()`) for your own migrations to run.
 
 `chronik-postgres` ships no driver, no connection pool and no DDL: it takes an Exposed `Database`
 you hand it, and the table describes itself — indexes included — so a schema generator produces
