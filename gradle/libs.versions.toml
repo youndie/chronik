@@ -9,6 +9,12 @@ kotlinx-coroutines = "1.11.0"
 postgres-driver = "42.7.13"
 testcontainers = "2.0.5"
 hikari = "7.0.2"
+# The Kotlin/Native-capable driver. Pinned like the rest: it carries a Rust runtime, and a stand
+# that changes its driver silently answers a different question every few months.
+sqlx4k = "1.13.1"
+# Test-only: the databases the SQLite corpus run opens are files, and a file has to be created on
+# both targets from the same source.
+okio = "3.18.2"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -20,6 +26,14 @@ exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version
 postgres-driver = { module = "org.postgresql:postgresql", version.ref = "postgres-driver" }
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
+
+# The database-agnostic half of sqlx4k: `Driver`, `Transaction`, `Statement`, `ResultSet`. NOT a
+# driver — see chronik-sqlx4k-sqlite/build.gradle.kts for why the store depends on this and not on
+# `sqlx4k-sqlite`.
+sqlx4k-core = { module = "io.github.smyrgeorge:sqlx4k", version.ref = "sqlx4k" }
+sqlx4k-sqlite = { module = "io.github.smyrgeorge:sqlx4k-sqlite", version.ref = "sqlx4k" }
+
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

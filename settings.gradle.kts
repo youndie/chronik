@@ -47,6 +47,16 @@ project(":dev-worker").projectDir = file("dev/worker")
 // and a number without the stand that produced it is not a measurement.
 include(":chronik-benchmark")
 
+// The second backend, and the first one that runs where the JVM does not: SQLite through sqlx4k.
+//
+// NAMED FOR BOTH THE LIBRARY AND THE DIALECT, because both are choices a consumer has to make. A
+// module per driver is not a preference either: a Kotlin/Native binary that links two of sqlx4k's
+// drivers does not link at all, so `-postgres` beside this one would have to be a separate artefact
+// whatever the code looked like. This one carries no driver of its own — it takes the one the
+// application opened — so the module that names SQLite in its SQL does not force SQLite's Rust
+// runtime onto a build that wanted another.
+include(":chronik-sqlx4k-sqlite")
+
 // The corpus of cases every storage implementation has to satisfy. Written while there is only one
 // implementation, on purpose: a corpus written after the second describes the intersection of the
 // two rather than the contract.

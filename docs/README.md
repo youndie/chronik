@@ -99,14 +99,16 @@ python3 scripts/code_anchors.py --repos ..
 - [x] [research-architecture](research/research-architecture.md) — проверенные факты о соседних
   проектах, восемь решений, риски и три отклонения от исходного брифа
 
-### Services (4)
+### Services (5)
 
 Модули chronik:
 
 - [x] [chronik-core](services/chronik-core.md) — примитив: три операции, контракты хранилища и
   приёмника, воркер; SQL не знает
-- [x] [chronik-postgres](services/chronik-postgres.md) — единственный модуль, знающий SQL: выборка
-  `SKIP LOCKED`, аренда колонкой, таблица без DDL
+- [x] [chronik-postgres](services/chronik-postgres.md) — бэкенд для JVM: выборка `SKIP LOCKED`,
+  аренда колонкой, таблица без DDL
+- [x] [chronik-sqlx4k-sqlite](services/chronik-sqlx4k-sqlite.md) — второй бэкенд: SQLite через sqlx4k, там где
+  нет JVM; claim одним оператором, драйвер приходит снаружи
 - [x] [chronik-conformance](services/chronik-conformance.md) — корпус случаев, гоняемый против
   любой реализации хранилища
 

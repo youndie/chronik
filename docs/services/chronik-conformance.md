@@ -14,7 +14,9 @@ publishes:
 # chronik-conformance
 
 > **Модуль существует** ([B-12](../backlog/B-12-conformance-kit.md), закрыт): семнадцать случаев,
-> гоняются против Postgres-бэкенда, у каждого случая свой сторож холостой проверки.
+> гоняются против **обоих** бэкендов — Postgres на JVM и SQLite на JVM и на `linuxX64`
+> ([B-17](../backlog/B-17-sqlx4k-sqlite-store.md)), — у каждого случая свой сторож холостой
+> проверки.
 
 ## 1. Ответственность
 
@@ -29,8 +31,11 @@ publishes:
 
 `jvm()` и `linuxX64()`, тот же список, что у [chronik-core](chronik-core.md)
 ([B-16](../backlog/B-16-linux-native-target.md)). Это не симметрия ради симметрии: корпус
-существует ради второй реализации, а первая заявленная вторая — бэкенд на Kotlin/Native, и
-корпус, останавливающийся на JVM, нечем к ней приложить.
+существует ради второй реализации, а вторая реализация —
+[chronik-sqlx4k-sqlite](chronik-sqlx4k-sqlite.md) — работает на Kotlin/Native, и корпус, останавливающийся на
+JVM, нечем к ней приложить. С 15.09.2026 это уже не довод, а факт: корпус гоняется на обоих
+таргетах и **ловит** там подменённую реализацию (положительный контроль в
+[B-17](../backlog/B-17-sqlx4k-sqlite-store.md)).
 
 ## 2. Контракты
 
@@ -44,7 +49,8 @@ publishes:
 | `chronik-conformance/src/commonMain/kotlin/ConformanceKit.kt` | семнадцать случаев, каждый назван правилом |
 | `chronik-conformance/src/commonMain/kotlin/Subject.kt` | что реализация обязана предоставить сверх хранилища: коммит и отказ от транзакции |
 | `chronik-conformance/src/commonTest/kotlin/KitCatchesViolationsTest.kt` | сторож холостой проверки — по декоратору на случай |
-| `chronik-postgres/src/test/kotlin/PostgresConformanceTest.kt` | корпус против настоящего бэкенда |
+| `chronik-postgres/src/test/kotlin/PostgresConformanceTest.kt` | корпус против Postgres |
+| `chronik-sqlx4k-sqlite/src/commonTest/kotlin/SqliteConformanceTest.kt` | тот же корпус против SQLite, на обоих таргетах |
 
 | Репозиторий | Код | Что взято |
 |---|---|---|
