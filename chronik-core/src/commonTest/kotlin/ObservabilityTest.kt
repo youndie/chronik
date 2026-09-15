@@ -49,7 +49,7 @@ class ObservabilityTest {
         }
 
     @Test
-    fun `a timer that fires in its own second reports zero, which is not the same as unreported`() =
+    fun `a timer that fires in its own second reports zero rather than going unreported`() =
         runTest {
             val store = InMemoryTimerStore()
             val clock = TestClock()
@@ -235,7 +235,7 @@ class ObservabilityTest {
         }
 
     @Test
-    fun `a failure to record a firing is reported, since it explains a duplicate`() =
+    fun `a failure to record a firing is reported since it explains a duplicate`() =
         runTest {
             val store = InMemoryTimerStore()
             val clock = TestClock()

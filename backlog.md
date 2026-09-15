@@ -42,7 +42,7 @@
 
 No open tasks.
 
-## Closed (15)
+## Closed (16)
 
 **Обещания и оракул**
 
@@ -73,6 +73,7 @@ No open tasks.
 
 - [B-10](docs/backlog/B-10-petich-bridge.md) `[x]` - Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация
 - [B-11](docs/backlog/B-11-scheduler-boundary.md) `[x]` - Решить судьбу petich-scheduler: слой совместимости или устаревание
+- [B-16](docs/backlog/B-16-linux-native-target.md) `[x]` - Таргет linuxX64: потребитель на Kotlin/Native не может взять jvm-only библиотеку
 
 <!-- END INDEX -->
 

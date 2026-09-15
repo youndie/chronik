@@ -91,7 +91,7 @@ class DeliveryRetryTest {
      * that high, which is exactly why nothing would catch it.
      */
     @Test
-    fun `an absurd attempt count still yields the ceiling, not a wrapped-around zero`() {
+    fun `an absurd attempt count still yields the ceiling rather than a wrapped-around zero`() {
         val worker =
             TimerWorker(
                 InMemoryTimerStore(),

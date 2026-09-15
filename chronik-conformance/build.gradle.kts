@@ -8,6 +8,12 @@ plugins {
 kotlin {
     jvm()
 
+    // The corpus travels with the target list of the primitive it checks, and it has to: a backend
+    // written for Kotlin/Native has nothing to be checked WITH if the corpus stops at the JVM, and
+    // "the second implementation is verifiable by the same cases" is the whole reason B-12 built it
+    // while there was only one.
+    linuxX64()
+
     sourceSets {
         commonMain {
             dependencies {

@@ -48,7 +48,7 @@ class ChronikOperationsTest {
      * nobody is waiting for right now never happens.
      */
     @Test
-    fun `building on a store that cannot join a transaction fails at the wiring, not at the first schedule`() {
+    fun `building on a store that cannot join a transaction fails at the wiring rather than at the first schedule`() {
         val failure =
             assertFailsWith<IllegalArgumentException> {
                 chronik(NonTransactionalStore(), ChronikClock { EpochSeconds(0) })

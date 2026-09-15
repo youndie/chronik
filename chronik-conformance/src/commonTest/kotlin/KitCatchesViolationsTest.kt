@@ -257,7 +257,7 @@ class KitCatchesViolationsTest {
         )
 
     @Test
-    fun `every injected violation is reported, and by name`() =
+    fun `every injected violation is reported and named`() =
         runTest {
             for ((rule, break_) in violations()) {
                 val reference = ReferenceStore()

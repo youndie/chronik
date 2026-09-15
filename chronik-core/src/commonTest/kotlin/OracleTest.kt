@@ -64,7 +64,7 @@ class OracleTest {
     }
 
     @Test
-    fun `for any sequence, what fired is exactly what came due and was not cancelled`() =
+    fun `for any sequence what fired is exactly what came due and was not cancelled`() =
         runTest {
             val random = Random(20260904)
 

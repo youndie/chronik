@@ -1,5 +1,12 @@
 package io.github.youndie.chronik
 
+// Explicit, and it stays explicit. `kotlin.jvm.*` is a default import on the JVM and nowhere else,
+// so this file compiled without the line for as long as `jvm()` was the only target and stopped
+// compiling the hour `linuxX64()` was added. The annotation itself is common: it is an
+// `OptionalExpectation`, which is what lets a value class be declared once and be an inline class
+// on the JVM and an ordinary one everywhere else.
+import kotlin.jvm.JvmInline
+
 /**
  * A point in time, in whole seconds since the Unix epoch.
  *
