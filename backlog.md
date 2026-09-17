@@ -38,13 +38,11 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (1)
+## Open (0)
 
-| Task | | Priority | Size | Blocked by |
-|---|---|---|---|---|
-| [B-18](docs/backlog/B-18-release-0-2-0.md) `[~]` | Релиз 0.2.0: нативные варианты доезжают до потребителя | P1 | S | - |
+No open tasks.
 
-## Closed (17)
+## Closed (18)
 
 **Обещания и оракул**
 
@@ -77,6 +75,7 @@
 - [B-10](docs/backlog/B-10-petich-bridge.md) `[x]` - Мост к саге: awaitUntil, активное истечение шага и cancel как компенсация
 - [B-11](docs/backlog/B-11-scheduler-boundary.md) `[x]` - Решить судьбу petich-scheduler: слой совместимости или устаревание
 - [B-16](docs/backlog/B-16-linux-native-target.md) `[x]` - Таргет linuxX64: потребитель на Kotlin/Native не может взять jvm-only библиотеку
+- [B-18](docs/backlog/B-18-release-0-2-0.md) `[x]` - Релиз 0.2.0: нативные варианты доезжают до потребителя
 
 <!-- END INDEX -->
 
