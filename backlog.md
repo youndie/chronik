@@ -38,9 +38,11 @@
 
 <!-- BEGIN INDEX -->
 
-## Open (0)
+## Open (1)
 
-No open tasks.
+| Task | | Priority | Size | Blocked by |
+|---|---|---|---|---|
+| [B-18](docs/backlog/B-18-release-0-2-0.md) `[~]` | Релиз 0.2.0: нативные варианты доезжают до потребителя | P1 | S | - |
 
 ## Closed (17)
 
