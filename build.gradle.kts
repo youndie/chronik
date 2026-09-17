@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlinJvm) apply false
-    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(wip.plugins.kotlinJvm) apply false
+    alias(wip.plugins.kotlinMultiplatform) apply false
 }
 
 // The JVM floor used to be set here by hand, for every module at once, along with the

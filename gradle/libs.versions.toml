@@ -1,7 +1,10 @@
 [versions]
-# The shared build conventions. One number: every sborka plugin below takes its version from here.
-sborka = "0.4.0.43"
-kotlin = "2.4.10"
+# The shared build conventions. One number: every sborka plugin below takes its version from here,
+# and so does the compiler — the `wip` catalog this release publishes carries `kotlin`, which is why
+# there is no kotlin version in this file to drift from the rest of the portfolio. The Kotlin plugins
+# are applied as `wip.plugins.*`; a library published by one repository and read by another carries
+# metadata a mismatched compiler refuses, so that version is not this repository's to choose.
+sborka = "0.4.0.86"
 exposed = "1.4.0"
 kotlinx-coroutines = "1.11.0"
 # Pinned to a major rather than latest: a test stand that silently changes its DBMS version
@@ -36,9 +39,6 @@ sqlx4k-sqlite = { module = "io.github.smyrgeorge:sqlx4k-sqlite", version.ref = "
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 
 [plugins]
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-
 sborkaKmp = { id = "io.github.youndie.sborka.kmp", version.ref = "sborka" }
 sborkaJvm = { id = "io.github.youndie.sborka.jvm", version.ref = "sborka" }
 sborkaLint = { id = "io.github.youndie.sborka.lint", version.ref = "sborka" }
