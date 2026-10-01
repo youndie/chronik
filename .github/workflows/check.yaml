@@ -36,13 +36,15 @@ jobs:
       # than of a separate build job. One target, one thing to remember: the gate that is not
       # `make check` is the one that stops being run (B-13).
       #
-      # 21 is JVM_FLOOR, and it is the floor a consumer may be on rather than the newest JDK
-      # available. Building on something newer would let a `java.*` call from a later release in
-      # without the build ever objecting, and the consumer would meet it at class loading.
+      # 25 is the toolchain sborka builds with, not the floor a consumer may be on (21,
+      # `sborka.jvmFloor`). A newer JDK no longer lets a `java.*` call from a later release in
+      # unnoticed: `sborka.kmp` and `sborka.jvm` compile against the floor's class library
+      # (`-Xjdk-release` for Kotlin, `options.release` for Java), so such a call fails here and not
+      # at the consumer's class loading.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          java-version: "25"
 
       - uses: gradle/actions/setup-gradle@v4
 
@@ -99,7 +101,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          java-version: "25"
 
       - uses: gradle/actions/setup-gradle@v4
 
@@ -134,7 +136,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          java-version: "25"
 
       - uses: gradle/actions/setup-gradle@v4
 
