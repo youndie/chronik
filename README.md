@@ -1,6 +1,6 @@
 # chronik
 
-[![kotlin](https://img.shields.io/badge/Kotlin-2.4.10-blue?logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![maven central](https://img.shields.io/maven-central/v/io.github.youndie.chronik/chronik-core?label=maven%20central&color=40c14a)](https://central.sonatype.com/artifact/io.github.youndie.chronik/chronik-core)
 [![snapshots](https://reposilite.kotlin.website/api/badge/latest/snapshots/io/github/youndie/chronik-core?name=snapshots&color=blue&prefix=v)](https://reposilite.kotlin.website/#/snapshots/io/github/youndie/chronik-core)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
