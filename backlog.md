@@ -5,7 +5,7 @@
 > что пунктом не является: цель, вехи и решения.
 >
 > Новый пункт: скопировать [`docs/templates/backlog-item.md`](docs/templates/backlog-item.md),
-> взять следующий свободный `B-NN`, после правки прогнать `python3 scripts/backlog_index.py`.
+> взять следующий свободный `B-NN`, после правки прогнать `make fix`.
 
 ## Цель
 

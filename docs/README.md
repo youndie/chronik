@@ -34,7 +34,7 @@ JVM (см. решение D2 ресёрча), и вместе с ним появ
 на неслитой ветке в репозитории движка, потому что зависимостью chronik пока не является.
 
 Правило, по которому это устроено: документ со `status: draft` на `main` означает, что намерение
-записано как факт, и `docs_check.py --on-main` считает это дефектом. Пока код писался, все пять фич
+записано как факт, и `make docs-on-main` считает это дефектом. Пока код писался, все пять фич
 жили в ветке `docs/v1-specification` именно поэтому.
 
 ## Соглашения
@@ -74,19 +74,17 @@ JVM (см. решение D2 ресёрча), и вместе с ним появ
 ## Проверки
 
 ```bash
+pip install pyyaml
 make check
 ```
 
-То же самое врозь:
-
-```bash
-pip install pyyaml
-python3 scripts/backlog_index.py --check
-python3 scripts/docs_check.py
-python3 scripts/coverage_map.py --check
-python3 scripts/bdd_report.py
-python3 scripts/code_anchors.py --repos ..
-```
+`make check` — это гейт и отчёты, ровно то, что гоняет CI; кроме документов он включает
+`./gradlew check`. Врозь: `make gate` — блокирующая половина, `make report` — два неблокирующих
+отчёта (покрытие BDD и якоря в код), `make fix` — перегенерировать индекс бэклога и дописать
+недостающие строки карты покрытия. Проверки документов — из
+[docs-bootstrap](https://github.com/youndie/docs-bootstrap), той версии, которую закрепляет строка
+`uses: youndie/docs-bootstrap@…` в `.github/workflows/check.yaml`; первый запуск скачивает её в
+`.docs-bootstrap/`. Копий скриптов в `scripts/` больше нет.
 
 ## Карта покрытия
 
