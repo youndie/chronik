@@ -61,7 +61,7 @@ Kotlin/Native и Xerial sqlite-jdbc на JVM, и они расходятся в 
 
 | Репозиторий | Код | Что взято |
 |---|---|---|
-| shildik | `shildik/storage-sqlx4k-core/src/commonMain/kotlin/.../Queries.kt` | форма «SQL пишется против `QueryExecutor`, а не против драйвера» |
+| shildik | `shildik/storage-sqlx4k-core/src/commonMain/kotlin/io/github/youndie/shildik/storage/sqlx4k/Queries.kt` | `sql()` только с именованными параметрами и обёртки над запросом, разворачивающие `Result` через `getOrThrow()`. Не взято: там обёртки висят на `Driver` и берут транзакцию из `CoroutineContext`, здесь — на `QueryExecutor`, а транзакция приходит ручкой (§2) |
 | xyk | `xyk/server/src/commonMain/kotlin/io/github/youndie/xyk/db/Database.kt` | файловая база и почему не `:memory:` |
 
 ## 3. Как это устроено

@@ -57,8 +57,8 @@ BACKLOG_FORM ?= files
 # its siblings too, which a suffix match can mistake for this repository.
 #
 # Two things about the anchor report on this repository, and both are honest results rather than
-# misconfiguration: the documents cite petich, konekt, booblik, kompot and xyk by path, so those
-# five have to sit under REPOS for their anchors to resolve. Locally that depends on where they happen to
+# misconfiguration: the documents cite petich, konekt, booblik, kompot, xyk and shildik by path, so
+# those six have to sit under REPOS for their anchors to resolve. Locally that depends on where they happen to
 # live; the weekly CI job clones them into `repos/` explicitly and passes `REPOS=repos` instead of
 # assuming.
 REPOS ?= ..
@@ -100,7 +100,7 @@ gate: docs-gate
 	./gradlew check
 
 # Non-blocking, on purpose, and read by a person: BDD coverage and code anchors, at the version the
-# workflow pins. Most anchors that do not resolve are addresses in the five repositories named at
+# workflow pins. Most anchors that do not resolve are addresses in the six repositories named at
 # REPOS above.
 report: docs-report
 
