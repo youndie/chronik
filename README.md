@@ -33,14 +33,18 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.youndie.chronik:chronik-core:0.1.0")
-    implementation("io.github.youndie.chronik:chronik-postgres:0.1.0")
+    implementation("io.github.youndie.chronik:chronik-core:0.2.0")
+    implementation("io.github.youndie.chronik:chronik-postgres:0.2.0")
 }
 ```
 
 Releases are on Maven Central. Snapshots keep going to
-`https://reposilite.kotlin.website/snapshots` as `0.1.0.<build>`, which is where to look for
-something merged but not released — add that repository beside `mavenCentral()` to take one.
+`https://reposilite.kotlin.website/snapshots` as `<next release>.<build>` (`0.2.1.<build>` now), which
+is where to look for something merged but not released — add that repository beside
+`mavenCentral()` to take one. A snapshot sorts above the release of the same number, so a build that
+takes one is not offered that release as an upgrade: moving back to Central is a hand edit.
+`0.2.0.17` and the builds after it are `0.2.0` and the commits that followed it, published before
+the version head moved; nothing needs them.
 
 Two backends, and which one you can use depends on where you run. `chronik-postgres` is the JVM
 only — it is Exposed and JDBC. `chronik-sqlx4k-sqlite` is SQLite through sqlx4k and is built for the JVM
@@ -49,7 +53,7 @@ a store rather than only a primitive.
 
 ```kotlin
 // a Kotlin/Native service, on the driver it already opened
-implementation("io.github.youndie.chronik:chronik-sqlx4k-sqlite:0.1.0")
+implementation("io.github.youndie.chronik:chronik-sqlx4k-sqlite:0.2.0")
 ```
 
 `chronik-sqlx4k-sqlite` carries no driver: it takes the sqlx4k `Driver` your application opened, and states
