@@ -65,8 +65,8 @@ line in `.github/workflows/check.yaml` pins; the first `make check` fetches that
 revision 2): `make stand` and `make mutants` read no pin and need no network, and a new target that
 leads to `docs-gate` goes into that list.
 
-The anchors point into petich, konekt, booblik and kompot by path, and the weekly anchors job clones
-those four beside this checkout (`REPOS=repos`) so that they are checked against each one's current
+The anchors point into petich, konekt, booblik, kompot and xyk by path, and the weekly anchors job
+clones those five beside this checkout (`REPOS=repos`) so that they are checked against each one's current
 `main` — a refactor there is what that job exists to notice. Since docs-bootstrap 0.3.4 a path counts
 only in the repository its first segment names, so a local `make report` without those clones under
 `REPOS` reports them missing rather than finding a file of the same name in this one.
