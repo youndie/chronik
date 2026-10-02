@@ -70,7 +70,7 @@ HTTP-поверхности.
 | chronik-conformance | `chronik-conformance/src/commonMain/kotlin/ConformanceKit.kt` — те же правила как корпус для любого бэкенда |
 
 Соседний модуль, чьи решения здесь сознательно перевёрнуты:
-`petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt`.
+`youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt`.
 
 ## 5. Сценарии
 

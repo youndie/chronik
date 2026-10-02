@@ -61,16 +61,16 @@ tags: [integration]
 
 | Модуль | Код |
 |---|---|
-| petich-chronik | `petich/petich-chronik/src/commonMain/kotlin/` — шаг и компенсация |
+| petich-chronik | `youndie/petich@bfff0b6!/petich-chronik/src/commonMain/kotlin/` — шаг и компенсация |
 | chronik-core | `chronik-core/src/commonMain/kotlin/` — сам таймер |
 
 Что читать прежде, чем писать:
 
 | Репозиторий | Код | Зачем |
 |---|---|---|
-| petich | `petich/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt` | существующее активное истечение, с которым мост не должен конфликтовать |
-| petich | `petich/petich-core/src/commonMain/kotlin/Petich.kt` | `InterceptorResult.Suspend`, `ttl`, возобновление |
-| petich | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` | модуль с перекрывающейся ролью ([B-11](../backlog/B-11-scheduler-boundary.md)) |
+| petich | `youndie/petich@34dd4d7!/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt` | существующее активное истечение, с которым мост не должен конфликтовать |
+| petich | `youndie/petich@34dd4d7!/petich-core/src/commonMain/kotlin/Petich.kt` | `InterceptorResult.Suspend`, `ttl`, возобновление |
+| petich | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` | модуль с перекрывающейся ролью ([B-11](../backlog/B-11-scheduler-boundary.md)) |
 
 ## 5. Сценарии
 

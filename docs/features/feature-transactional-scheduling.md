@@ -57,7 +57,7 @@ tags: [semantics, durability]
 
 | Репозиторий | Код | Что там |
 |---|---|---|
-| petich | `petich/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt` | `update` — сага и события одним `suspendTransaction`, события пишутся только при `updatedRows > 0` |
+| petich | `youndie/petich@34dd4d7!/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt` | `update` — сага и события одним `suspendTransaction`, события пишутся только при `updatedRows > 0` |
 
 ## 5. Сценарии
 

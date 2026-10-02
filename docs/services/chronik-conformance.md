@@ -54,8 +54,8 @@ JVM, нечем к ней приложить. С 15.09.2026 это уже не �
 
 | Репозиторий | Код | Что взято |
 |---|---|---|
-| booblik | `booblik/settings.gradle.kts` | форма «один корпус против двух реализаций» (`booblik-conformance` / `booblik-native-conformance`) |
-| kompot | `kompot/kompot-tck/README.md` | таблица «проверка → правило спеки» и правило «копить находки, а не бросать на первой» |
+| booblik | `youndie/booblik@542143f!/settings.gradle.kts` | форма «один корпус против двух реализаций» (`booblik-conformance` / `booblik-native-conformance`) |
+| kompot | `youndie/kompot@2aa5cfa!/kompot-tck/README.md` | таблица «проверка → правило спеки» и правило «копить находки, а не бросать на первой» |
 
 ## 3. Как это устроено
 

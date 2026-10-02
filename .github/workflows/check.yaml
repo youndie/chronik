@@ -59,7 +59,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - uses: youndie/docs-bootstrap@v0.3.5
+      - uses: youndie/docs-bootstrap@v0.3.8
 
   # The handover stand, in a job of its own because it is the one check `make check` deliberately
   # leaves out: it needs a working docker and the better part of a minute, and a contributor editing
@@ -95,7 +95,7 @@ jobs:
   # looks wrong on the day. A weekly verdict finds it; a per-push one would mostly re-prove the same
   # eleven facts and teach people to skip a slow job.
   #
-  # It DOES block, unlike the anchors below, because a survivor is a statement about this repository
+  # It blocks, as the anchors do, because a survivor is a statement about this repository
   # and nobody else's: the boundary of time is unguarded, and no refactor elsewhere can cause that.
   mutants:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
@@ -116,41 +116,25 @@ jobs:
 
       - run: make mutants
 
-  # Separate from the gate, and on a schedule rather than on a pull request, because an anchor rots
-  # when somebody refactors a **different** repository. A pull request here is the least likely
-  # moment for one to break, and running it there trains people to ignore a red build they did not
-  # cause. It also does not block: a path quoted *as obsolete* is indistinguishable from a live one
-  # by machine, so the report is read by a person. Pass `target: report REPOS=repos ANCHORS_ARGS=--check`
-  # once the stale list reaches zero.
+  # On a schedule, apart from the gate, because an anchor used to rot when somebody refactored a
+  # **different** repository, and a red pull request nobody here caused is one people learn to
+  # ignore. Every path outside this repository is now an address (SPEC 4.1) - at the commit that
+  # was read - which nothing elsewhere can move, so the report blocks: the Makefile sets
+  # `ANCHORS_ARGS=--check`, and `make check` in the job above fails on a path of this repository's
+  # own that resolves to nothing, in the pull request that broke it. This job runs the same report
+  # on the default branch once a week.
   anchors:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # THE ANCHORS OF THIS REPOSITORY POINT AT SIX OTHERS, which is why REPOS is not the default
-      # `..` here. The research verifies its facts against petich, konekt, booblik and kompot, and
-      # the sqlx4k service document cites xyk's database setup and shildik's query helpers; a path is
-      # only checkable where the file is, so those six have to be on disk. All six are public, so
-      # `secrets.GITHUB_TOKEN` — scoped to this repository — reaches them. A private one would take
-      # the warning branch below every week without ever saying why.
-      #
-      # A repository that cannot be cloned is a warning rather than a failure: its anchors are
-      # simply unchecked, and a red weekly build nobody caused is a build people learn to ignore.
-      - run: |
-          mkdir -p repos
-          ln -s "$GITHUB_WORKSPACE" repos/chronik
-          cd repos
-          for r in petich konekt booblik kompot xyk shildik; do
-            git clone --depth 1 --filter=blob:none \
-              "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository_owner }}/$r.git" \
-              || echo "::warning::$r is unreachable - its anchors were not checked"
-          done
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # `repos/` holds the six clones and a link to this checkout, so REPOS points there instead
-      # of at `..`.
-      - uses: youndie/docs-bootstrap@v0.3.5
+      # The code lives in this checkout, so its parent is a directory whose one subdirectory is
+      # this repository - which is exactly what REPOS (`..` by default) expects. The citations of
+      # petich, konekt, booblik, kompot, xyk and shildik are addresses at the commit that was read
+      # (SPEC 4.1), which the report holds to their form without fetching them, so no clones go
+      # beside it: a row about what konekt was on 2026-09-04 is about that commit, and resolving it
+      # against konekt's main today would vouch for a sentence nobody re-read.
+      - uses: youndie/docs-bootstrap@v0.3.8
         with:
-          target: report REPOS=repos
+          target: report

@@ -32,7 +32,7 @@ blocked_by: [B-05]
   вариантом, а не только в этом файле.
 - AC: если выбран слой совместимости — существующий API `ScheduledJob` продолжает работать без
   изменений на стороне приложения; если устаревание — есть путь миграции, а не только пометка.
-- Anchors: `petich/petich-scheduler/src/commonMain/kotlin/`, `petich/settings.gradle.kts`
+- Anchors: `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/`, `youndie/petich@34dd4d7!/settings.gradle.kts`
 
 ## Проверено на вехе M3, 04.09.2026 — гипотеза не подтвердилась
 

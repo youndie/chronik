@@ -56,13 +56,19 @@ BACKLOG_FORM ?= files
 # directory this clone sits in - in CI, a directory holding this clone and nothing else; on a laptop,
 # its siblings too, which a suffix match can mistake for this repository.
 #
-# Two things about the anchor report on this repository, and both are honest results rather than
-# misconfiguration: the documents cite petich, konekt, booblik, kompot, xyk and shildik by path, so
-# those six have to sit under REPOS for their anchors to resolve. Locally that depends on where they happen to
-# live; the weekly CI job clones them into `repos/` explicitly and passes `REPOS=repos` instead of
-# assuming.
+# The documents also cite petich, konekt, booblik, kompot, xyk and shildik. Those citations are
+# addresses at the commit that was read (SPEC 4.1, `youndie/<repo>@<commit>!/<path>`), so nothing
+# beside this clone has to be checked out for the report to be complete.
 REPOS ?= ..
 PY ?= python3
+# THE CODE-ANCHORS REPORT BLOCKS. `--check` takes the `-` off its line in check.mk, so `make check`
+# - and CI, which runs it - fails on a path in the documents that resolves to nothing. The report
+# reached zero with every path outside this repository written as an address (SPEC 4.1:
+# `<artefact>!/<path>`, `youndie/<repo>@<commit>!/<path>`), which no refactor elsewhere can move, so
+# what can turn it red now is a path of this repository's own, renamed or deleted without its
+# document - caught in the pull request that did it. A path quoted as obsolete is written the same
+# way, at a commit it existed in. `make report ANCHORS_ARGS=` runs it as a report again.
+ANCHORS_ARGS ?= --check
 
 # Where the pin is, and what it names.
 DOCS_BOOTSTRAP_PIN ?= .github/workflows/check.yaml
@@ -83,7 +89,7 @@ DOCS_BOOTSTRAP_GOALS := check gate report fix
 help:
 	@echo "make check   - the gate and the reports: exactly what CI runs (documents + ./gradlew check)"
 	@echo "make gate    - the blocking half alone"
-	@echo "make report  - non-blocking: BDD coverage, code anchors"
+	@echo "make report  - BDD coverage (non-blocking), code anchors (blocking: ANCHORS_ARGS)"
 	@echo "make fix     - regenerate the backlog index, fill in missing coverage-map lines"
 	@echo "make stand   - the handover stand: kills a worker holding a timer (needs docker)"
 	@echo "make mutants - aimed mutation run over the boundary of time (needs docker)"
@@ -99,9 +105,9 @@ check: gate report
 gate: docs-gate
 	./gradlew check
 
-# Non-blocking, on purpose, and read by a person: BDD coverage and code anchors, at the version the
-# workflow pins. Most anchors that do not resolve are addresses in the six repositories named at
-# REPOS above.
+# BDD coverage, at the version the workflow pins, is non-blocking on purpose and read by a person:
+# demanding a percentage of automated scenarios means nothing while acceptance is manual. Code
+# anchors block (ANCHORS_ARGS above).
 report: docs-report
 
 fix: docs-fix

@@ -62,8 +62,8 @@ HTTP-колбэком или прямым вызовом в процессе —
 
 | Репозиторий | Код | Что оттуда |
 |---|---|---|
-| petich | `petich/petich-outbox-core/src/commonMain/kotlin/OutboxRelayWorker.kt` | backoff в памяти, счётчик в хранилище, dead letter как терминальный статус |
-| petich | `petich/petich-outbox-core/src/commonMain/kotlin/OutboxPublisher.kt` | «контракт в библиотеке, провод — нет» |
+| petich | `youndie/petich@34dd4d7!/petich-outbox-core/src/commonMain/kotlin/OutboxRelayWorker.kt` | backoff в памяти, счётчик в хранилище, dead letter как терминальный статус |
+| petich | `youndie/petich@34dd4d7!/petich-outbox-core/src/commonMain/kotlin/OutboxPublisher.kt` | «контракт в библиотеке, провод — нет» |
 
 ## 5. Сценарии
 

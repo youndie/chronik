@@ -50,7 +50,7 @@ JVM и незаконная на Native (запятая в имени теста
 
 * **Публичный API:** `chronik-core/src/commonMain/kotlin/` — три операции, `TimerSink`, `TimerStore`
 * **Часы — параметр**, а не `System.currentTimeMillis()` внутри. Причина та же, по которой это
-  сделано в `petich/petich-core/src/commonMain/kotlin/Petich.kt` (`PetichClock`): `commonMain` не
+  сделано в `youndie/petich@34dd4d7!/petich-core/src/commonMain/kotlin/Petich.kt` (`PetichClock`): `commonMain` не
   видит `java.*`, а тест обязан двигать время, а не спать на настоящих часах.
 
 ## 2a. Якоря
@@ -69,9 +69,9 @@ JVM и незаконная на Native (запятая в имени теста
 
 | Репозиторий | Код | Что взято |
 |---|---|---|
-| petich | `petich/petich-outbox-core/src/commonMain/kotlin/OutboxRelayWorker.kt` | форма воркера: `tick()` отдельно от `start(scope)`, провал одного не топит батч |
-| petich | `petich/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt` | опциональное расширение хранилища вместо метода в базовом интерфейсе |
-| petich | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` | чего **не** повторять: исполнение задачи внутри и допущенный двойной запуск |
+| petich | `youndie/petich@34dd4d7!/petich-outbox-core/src/commonMain/kotlin/OutboxRelayWorker.kt` | форма воркера: `tick()` отдельно от `start(scope)`, провал одного не топит батч |
+| petich | `youndie/petich@34dd4d7!/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt` | опциональное расширение хранилища вместо метода в базовом интерфейсе |
+| petich | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` | чего **не** повторять: исполнение задачи внутри и допущенный двойной запуск |
 
 ## 3. Как это устроено
 

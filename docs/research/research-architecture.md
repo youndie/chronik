@@ -25,6 +25,15 @@ chronik — долговечный таймер и только он. `schedule(
 
 ## 1. Проверенные факты
 
+> **Пути в соседние репозитории — адреса на коммит**, `youndie/<repo>@<commit>!/<path>`
+> (docs-bootstrap SPEC §4.1), во всей документации, не только здесь. Коммит — голова `main` соседа
+> в день, когда строка была записана, то есть то, что тогда было прочитано; факт — про тот коммит, а
+> не про сегодняшний `main` соседа: с тех пор petich и booblik сменили пакеты, а konekt убрал
+> `ClaimedSweep` (§1.4). Три исключения адресуют первый коммит, где сказанное стало верным:
+> координата `io.github.youndie.petich` в §1.1 (`9e7f7ec`, вечер того же дня, что и правка строки),
+> модуль `petich-chronik` (`bfff0b6`, заведён по B-10 вечером 04.09) и файл xyk, чья публичная
+> история начинается позже строки (`1d1f656`).
+
 ### 1.1 У petich уже есть модуль расписания, и он делает не то
 
 Проверено в исходниках petich (`petich-scheduler`, тег текущей публикации `0.1.0.10` в каталоге
@@ -32,14 +41,14 @@ chronik — долговечный таймер и только он. `schedule(
 
 | Факт | Где проверено |
 |---|---|
-| Модуль `petich-scheduler` существует и опубликован как `io.github.youndie.petich:petich-scheduler` | `petich/settings.gradle.kts`, `petich/README.md` — таблица модулей |
-| Он **исполняет** задачу сам: `ScheduledJobRunner.run(job)` вызывается воркером внутри `tick()` | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
-| Выборка «что пора» — обычный `findDue(now, limit)`, без блокировки строк и без lease | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
+| Модуль `petich-scheduler` существует и опубликован как `io.github.youndie.petich:petich-scheduler` | `youndie/petich@9e7f7ec!/settings.gradle.kts`, `youndie/petich@9e7f7ec!/README.md` — таблица модулей |
+| Он **исполняет** задачу сам: `ScheduledJobRunner.run(job)` вызывается воркером внутри `tick()` | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
+| Выборка «что пора» — обычный `findDue(now, limit)`, без блокировки строк и без lease | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt` |
 | Двойное срабатывание допущено сознательно: при провале записи нового состояния следующий проход снова видит задачу как due | комментарий в `tick()`, ветка `catch` вокруг `repository.save` |
-| Повтор — календарный и с таймзоной: `ONCE / DAILY / WEEKLY / MONTHLY`, «то же число следующего месяца» | `petich/petich-scheduler/src/commonMain/kotlin/ScheduledJob.kt`, `Recurrence.nextRunAfter` |
+| Повтор — календарный и с таймзоной: `ONCE / DAILY / WEEKLY / MONTHLY`, «то же число следующего месяца» | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/ScheduledJob.kt`, `Recurrence.nextRunAfter` |
 | Пропущенные периоды не догоняются: `catchUp` перематывает к первому будущему сроку | `SchedulerWorker.catchUp` |
 | Счётчик подряд идущих неудач и отключение задачи после `maxFailures = 5` | `SchedulerWorker`, поле `consecutiveFailures` в `ScheduledJob` |
-| Транзакционной привязки к чужой записи нет: `ScheduleRepository` — четыре suspend-метода, транзакцию не принимает | `petich/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt`, интерфейс `ScheduleRepository` |
+| Транзакционной привязки к чужой записи нет: `ScheduleRepository` — четыре suspend-метода, транзакцию не принимает | `youndie/petich@34dd4d7!/petich-scheduler/src/commonMain/kotlin/SchedulerWorker.kt`, интерфейс `ScheduleRepository` |
 
 **Следствие 1.** Соседний модуль перекрывает chronik по названию и расходится по существу в трёх
 местах: он **исполняет** чужой код, он **не** транзакционен и он **допускает** повтор без
@@ -61,10 +70,10 @@ chronik — долговечный таймер и только он. `schedule(
 
 | Факт | Где проверено |
 |---|---|
-| Обновление саги и вставка outbox-событий идут одной SQL-транзакцией | `petich/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt`, метод `update` |
+| Обновление саги и вставка outbox-событий идут одной SQL-транзакцией | `youndie/petich@34dd4d7!/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt`, метод `update` |
 | Транзакцию открывает `suspendTransaction(db)` внутри `dbQuery`, вокруг обоих операторов | там же, `private suspend fun <T> dbQuery` |
 | События пишутся только если `UPDATE` действительно задел строку (`updatedRows > 0`) | там же, условие перед `batchInsert` |
-| Потеря событий при не-outbox-хранилище объявлена, счётна и отказуема: `PetichEngineMetrics.onDroppedEvents`, `PetichEngineConfig(requireOutbox = true)` | `petich/README.md`, раздел про надёжные уведомления |
+| Потеря событий при не-outbox-хранилище объявлена, счётна и отказуема: `PetichEngineMetrics.onDroppedEvents`, `PetichEngineConfig(requireOutbox = true)` | `youndie/petich@34dd4d7!/README.md`, раздел про надёжные уведомления |
 
 **Следствие.** «Писать таймер в ту же транзакцию» — не изобретение chronik, а перенос уже
 работающего приёма на второй вид записи. И вместе с приёмом переносится его самая ценная часть:
@@ -95,14 +104,17 @@ chronik — долговечный таймер и только он. `schedule(
 
 ### 1.4 Аренда уже написана потребителем — руками и по той же причине
 
-Проверено в konekt, эталонном потребителе стека.
+Проверено в konekt, эталонном потребителе стека, на `0ac4dd7` (04.09.2026). С 02.10.2026
+`ClaimedSweep` в konekt нет: обе очереди подметальщика арбитрирует сам petich (youndie/petich#70), и
+обёртка удалена в youndie/konekt#65. Таблица ниже — про то, как потребитель дошёл до аренды, а не
+про его сегодняшний код.
 
 | Факт | Где проверено |
 |---|---|
-| Свой декоратор `ClaimedSweep` вокруг `ExpiringPetichRepository` петича | `konekt/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` |
+| Свой декоратор `ClaimedSweep` вокруг `ExpiringPetichRepository` петича | `youndie/konekt@0ac4dd7!/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` |
 | Заявка ставится ровно в `findExpired` — «в единственном вызове, который решает, чем эта реплика займётся» | там же, `override suspend fun findExpired` |
 | Аренда — 5 минут, и это именно lease: «победивший и умерший посреди компенсации не должен держать сагу вечно» | там же, параметр `lease` |
-| Заявка живёт в собственной таблице `SagaSweepClaimTable` через `insertIgnore` | `konekt/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` (импорты и `claim`) |
+| Заявка живёт в собственной таблице `SagaSweepClaimTable` через `insertIgnore` | `youndie/konekt@0ac4dd7!/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` (импорты и `claim`) |
 | Проигравшего видно — это половина, которая держит механизм честным | комментарий «THE LOSER IS OBSERVABLE» там же |
 
 **Следствие 1.** Механизм chronik — не гипотеза, а обобщение уже написанного кода. Потребитель
@@ -119,10 +131,10 @@ chronik — долговечный таймер и только он. `schedule(
 
 | Факт | Где проверено |
 |---|---|
-| `docker compose kill` посреди удержания задачи, три воркера, аренда и работа заданы через окружение | `booblik/dev/check-redistribution.sh` |
+| `docker compose kill` посреди удержания задачи, три воркера, аренда и работа заданы через окружение | `youndie/booblik@542143f!/dev/check-redistribution.sh` |
 | SIGKILL выбран сознательно: «воркер, гасящийся по-хорошему, мог бы снять заявку; интересен тот, который не может» | комментарий в шапке того же скрипта |
 | Состояние спрашивается у **выжившего**, а не у убитого | там же, выбор `SURVIVOR_PORT` |
-| Отдельно есть тест краха на настоящем подпроцессе: «дешёвая версия этого теста проверяет что-то другое» | `booblik/booblik-core/src/test/kotlin/io/github/youndie/booblik/storage/CrashRecoveryTest.kt` |
+| Отдельно есть тест краха на настоящем подпроцессе: «дешёвая версия этого теста проверяет что-то другое» | `youndie/booblik@399f523!/booblik-core/src/test/kotlin/io/github/youndie/booblik/storage/CrashRecoveryTest.kt` |
 
 **Следствие.** Форма приёмки для chronik берётся отсюда целиком, включая два решения, за которые
 уже заплачено: спрашивать выжившего и убивать по-настоящему. Изобретать её заново незачем.
@@ -131,9 +143,9 @@ chronik — долговечный таймер и только он. `schedule(
 
 | Факт | Где проверено |
 |---|---|
-| kompot держит `kompot-tck` — «проверки соответствия протоколу чёрным ящиком, гоняются против любого адреса», с таблицей «проверка → правило спеки» | `kompot/kompot-tck/README.md` |
+| kompot держит `kompot-tck` — «проверки соответствия протоколу чёрным ящиком, гоняются против любого адреса», с таблицей «проверка → правило спеки» | `youndie/kompot@2aa5cfa!/kompot-tck/README.md` |
 | Проверки не бросают исключение, а копят находки: прогон доходит до конца | там же |
-| booblik держит пару `booblik-conformance` / `booblik-native-conformance` — один корпус против двух реализаций | `booblik/settings.gradle.kts` |
+| booblik держит пару `booblik-conformance` / `booblik-native-conformance` — один корпус против двух реализаций | `youndie/booblik@542143f!/settings.gradle.kts` |
 
 **Следствие.** У «SQLite потом, через тот же conformance kit» есть два разных прототипа, и ближе
 booblik: там один корпус гоняется против двух реализаций одного хранилища, что и требуется. Форма
@@ -385,12 +397,12 @@ chronik или объявить устаревшим. Гипотеза: слой
 
 **Открытый вопрос 2. Сколько из «пяти естественных таймеров» существуют на самом деле.**
 Проверено сегодня в konekt: истечение подтверждения — да, живой механизм (`SuspendedPetichSweeper`
-петича плюс локальный `ClaimedSweep`); TTL OTP — есть, но проверяется лениво, при обращении
-(`OtpChallenge.isExpired(now)`), и события «истёк» никто не ждёт; конец роуминга — тоже ленивый
-(`RoamingPackage.expiredAt(now)`); истечения плана и сброса квоты в коде **не нашлось вовсе**.
-Гипотеза: реальных кандидатов на первое подключение два — истечение подтверждения и один из
-ленивых, переведённый в активный, — но выбор второго требует продуктового решения, а не
-технического. **Проверить на вехе M4**, когда дойдёт до подключения у потребителя.
+петича плюс локальный `ClaimedSweep`, удалённый 02.10.2026, см. §1.4); TTL OTP — есть, но
+проверяется лениво, при обращении (`OtpChallenge.isExpired(now)`), и события «истёк» никто не ждёт;
+конец роуминга — тоже ленивый (`RoamingPackage.expiredAt(now)`); истечения плана и сброса квоты в
+коде **не нашлось вовсе**. Гипотеза: реальных кандидатов на первое подключение два — истечение
+подтверждения и один из ленивых, переведённый в активный, — но выбор второго требует продуктового
+решения, а не технического. **Проверить на вехе M4**, когда дойдёт до подключения у потребителя.
 
 **Открытый вопрос 3. Насколько опрос вообще годится при секундной точности.** Опрос раз в секунду
 по таблице ожидающих — это нагрузка, растущая с числом инстансов и не зависящая от числа таймеров.
@@ -408,7 +420,7 @@ chronik или объявить устаревшим. Гипотеза: слой
 **Отклонение 1. «Истечение паузы на человеке сейчас проверяется, когда кто-то пришёл».** Неверно:
 `SuspendedPetichSweeper` — фоновый воркер, он опрашивает `findExpired` раз в 30 секунд по
 умолчанию и вызывает компенсацию сам, никого не дожидаясь
-(`petich/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt`). Активное истечение уже
+(`youndie/petich@34dd4d7!/petich-core/src/commonMain/kotlin/SuspendedPetichSweeper.kt`). Активное истечение уже
 есть. Что даёт chronik на самом деле — не «активность», а три вещи поменьше: срок на **шаге**, а
 не на саге целиком; произвольное событие в момент срока, а не только откат; и точность, не
 привязанную к периоду опроса подметальщика. Формулировка ценности в `feature-saga-timers` написана
