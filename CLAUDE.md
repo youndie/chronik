@@ -21,8 +21,8 @@ opposite of the ones a neighbouring module already took.
 > `main` describes what exists. An open pull request describes what will be.
 
 A document with `status: draft` on `main` is a defect: it means intent was recorded as fact. CI
-enforces this on the default branch only (`docs_check.py --on-main`), because in a pull request
-`draft` is the normal state.
+enforces this on the default branch only (`make docs-on-main`), because in a pull request `draft`
+is the normal state.
 
 Corollary for this repository right now: `main` carries research and backlog, and nothing else,
 because that is all that can be verified today.
@@ -51,12 +51,18 @@ legitimate — compare octets against characters.
 make check
 ```
 
-The gate is `backlog_index.py --check`, `docs_check.py` and `coverage_map.py --check`. The two
-reports (`bdd_report.py`, `code_anchors.py`) are non-blocking on purpose and read by a person:
-demanding a percentage of automated scenarios is meaningless while acceptance is manual, and an
-anchor rots because somebody refactored a different repository.
+The gate is the documentation checks (`backlog_index.py --check`, `docs_check.py`,
+`coverage_map.py --check`) and `./gradlew check`, in one target. The two reports (`bdd_report.py`,
+`code_anchors.py`) are non-blocking on purpose and read by a person: demanding a percentage of
+automated scenarios is meaningless while acceptance is manual, and an anchor rots because somebody
+refactored a different repository.
 
-After editing a backlog item run `python3 scripts/backlog_index.py` and commit both files.
+The documentation checks are docs-bootstrap's, at the version the `uses: youndie/docs-bootstrap@…`
+line in `.github/workflows/check.yaml` pins; the first `make check` fetches that version into
+`.docs-bootstrap/` (it ignores itself), and there are no copies under `scripts/` to run by hand.
+`make gate` is the blocking half alone, `make report` the two reports.
+
+After editing a backlog item run `make fix` and commit both files.
 
 ## What this library refuses to become
 
