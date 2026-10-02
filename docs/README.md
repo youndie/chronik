@@ -79,12 +79,13 @@ make check
 ```
 
 `make check` — это гейт и отчёты, ровно то, что гоняет CI; кроме документов он включает
-`./gradlew check`. Врозь: `make gate` — блокирующая половина, `make report` — два неблокирующих
-отчёта (покрытие BDD и якоря в код), `make fix` — перегенерировать индекс бэклога и дописать
-недостающие строки карты покрытия. Проверки документов — из
-[docs-bootstrap](https://github.com/youndie/docs-bootstrap), той версии, которую закрепляет строка
-`uses: youndie/docs-bootstrap@…` в `.github/workflows/check.yaml`; первый запуск скачивает её в
-`.docs-bootstrap/`. Копий скриптов в `scripts/` больше нет. Проверки подключаются только для
+`./gradlew check`. Врозь: `make gate` — блокирующая половина, `make report` — два отчёта: покрытие
+BDD (не блокирует) и якоря в код (блокируют: `ANCHORS_ARGS ?= --check` в Makefile, путь в никуда
+роняет `make check`; `make report ANCHORS_ARGS=` — снова просто отчёт), `make fix` —
+перегенерировать индекс бэклога и дописать недостающие строки карты покрытия. Проверки документов
+— из [docs-bootstrap](https://github.com/youndie/docs-bootstrap), той версии, которую закрепляет
+строка `uses: youndie/docs-bootstrap@…` в `.github/workflows/check.yaml`; первый запуск скачивает
+её в `.docs-bootstrap/`. Копий скриптов в `scripts/` больше нет. Проверки подключаются только для
 `check`, `gate`, `report`, `fix` и целей `docs-` (`DOCS_BOOTSTRAP_GOALS`): `make stand` и
 `make mutants` пин не читают и сети не требуют.
 

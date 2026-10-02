@@ -63,9 +63,9 @@ tags: [durability, observability]
 
 | Репозиторий | Код | Что оттуда |
 |---|---|---|
-| konekt | `konekt/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` | аренда 5 минут и требование видеть проигравшего — написано потребителем руками по той же причине |
-| booblik | `booblik/dev/check-redistribution.sh` | форма стенда: три воркера, `docker compose kill`, спрашивать выжившего |
-| booblik | `booblik/booblik-core/src/test/kotlin/io/github/youndie/booblik/storage/CrashRecoveryTest.kt` | почему подмена вместо процесса проверяет что-то другое |
+| konekt | `youndie/konekt@0ac4dd7!/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` | аренда 5 минут и требование видеть проигравшего — написано потребителем руками по той же причине; удалено в youndie/konekt#65, когда арбитраж взял на себя petich |
+| booblik | `youndie/booblik@542143f!/dev/check-redistribution.sh` | форма стенда: три воркера, `docker compose kill`, спрашивать выжившего |
+| booblik | `youndie/booblik@399f523!/booblik-core/src/test/kotlin/io/github/youndie/booblik/storage/CrashRecoveryTest.kt` | почему подмена вместо процесса проверяет что-то другое |
 
 ## 5. Сценарии
 

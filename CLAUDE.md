@@ -52,10 +52,11 @@ make check
 ```
 
 The gate is the documentation checks (`backlog_index.py --check`, `docs_check.py`,
-`coverage_map.py --check`) and `./gradlew check`, in one target. The two reports (`bdd_report.py`,
-`code_anchors.py`) are non-blocking on purpose and read by a person: demanding a percentage of
-automated scenarios is meaningless while acceptance is manual, and an anchor rots because somebody
-refactored a different repository.
+`coverage_map.py --check`) and `./gradlew check`, in one target. Of the two reports,
+`bdd_report.py` is non-blocking on purpose and read by a person: demanding a percentage of
+automated scenarios is meaningless while acceptance is manual. `code_anchors.py` blocks
+(`ANCHORS_ARGS ?= --check` in the Makefile): a path in `docs/` that resolves to nothing fails
+`make check`; `make report ANCHORS_ARGS=` runs it as a report again.
 
 The documentation checks are docs-bootstrap's, at the version the `uses: youndie/docs-bootstrap@…`
 line in `.github/workflows/check.yaml` pins; the first `make check` fetches that version into
@@ -65,11 +66,12 @@ line in `.github/workflows/check.yaml` pins; the first `make check` fetches that
 revision 2): `make stand` and `make mutants` read no pin and need no network, and a new target that
 leads to `docs-gate` goes into that list.
 
-The anchors point into petich, konekt, booblik, kompot, xyk and shildik by path, and the weekly anchors
-job clones those six beside this checkout (`REPOS=repos`) so that they are checked against each one's current
-`main` — a refactor there is what that job exists to notice. Since docs-bootstrap 0.3.4 a path counts
-only in the repository its first segment names, so a local `make report` without those clones under
-`REPOS` reports them missing rather than finding a file of the same name in this one.
+The documents cite petich, konekt, booblik, kompot, xyk and shildik as addresses at the commit
+that was read — `youndie/<repo>@<commit>!/<path>`, docs-bootstrap's SPEC §4.1, the commit being
+the head of that repository's `main` on the day the row was written. The report lists them without
+fetching, so nothing has to be checked out beside this clone, and a refactor there cannot turn the
+check red. Write a new citation of another repository the same way: a bare path into it is
+reported missing, and fails the check, because a path counts only in the repository it belongs to.
 
 After editing a backlog item run `make fix` and commit both files.
 

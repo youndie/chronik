@@ -32,7 +32,7 @@ request», который её будит, — механизм возобнов
   возобновления.
 - AC: откат саги отменяет её таймеры, и отмена встаёт в обратный порядок наравне с остальными
   шагами.
-- Anchors: `petich/petich-chronik/src/commonMain/kotlin/`
+- Anchors: `youndie/petich@bfff0b6!/petich-chronik/src/commonMain/kotlin/`
 
 ## Половина упиралась в чужой движок — 04.09.2026, снято
 

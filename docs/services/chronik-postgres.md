@@ -28,7 +28,7 @@ publishes:
 - **не создаёт таблиц и не несёт DDL.** Таблицы описывают себя сами, индексы включительно, чтобы
   генератор миграций видел ровно то, по чему фильтруют запросы. Ровно так поступает
   `petich-postgres`, и ровно поэтому потребителю удаётся держать схему в согласии с библиотекой
-  (`konekt/server/src/test/kotlin/io/konekt/db/KonektSchemaTest.kt`);
+  (`youndie/konekt@0ac4dd7!/server/src/test/kotlin/io/konekt/db/KonektSchemaTest.kt`);
 - **не выбирает драйвер и не заводит пул** — принимает готовый `Database`;
 - **не растягивает транзакцию на доставку** (D3).
 
@@ -50,8 +50,8 @@ publishes:
 
 | Репозиторий | Код | Что оттуда |
 |---|---|---|
-| petich | `petich/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt` | одна транзакция на бизнес-запись и события; `Dispatchers.IO` вокруг JDBC |
-| konekt | `konekt/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` | аренда, написанная потребителем руками, и требование видеть проигравшего |
+| petich | `youndie/petich@34dd4d7!/petich-postgres/src/main/kotlin/ExposedPetichRepository.kt` | одна транзакция на бизнес-запись и события; `Dispatchers.IO` вокруг JDBC |
+| konekt | `youndie/konekt@0ac4dd7!/server/src/main/kotlin/io/konekt/petich/ClaimedSweep.kt` | аренда, написанная потребителем руками, и требование видеть проигравшего; удалена в youndie/konekt#65, когда арбитраж взял на себя petich |
 
 ## 3. Как это устроено
 
