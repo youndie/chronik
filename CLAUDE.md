@@ -60,7 +60,16 @@ refactored a different repository.
 The documentation checks are docs-bootstrap's, at the version the `uses: youndie/docs-bootstrap@…`
 line in `.github/workflows/check.yaml` pins; the first `make check` fetches that version into
 `.docs-bootstrap/` (it ignores itself), and there are no copies under `scripts/` to run by hand.
-`make gate` is the blocking half alone, `make report` the two reports.
+`make gate` is the blocking half alone, `make report` the two reports. Only `check`, `gate`,
+`report`, `fix` and the `docs-` targets load docs-bootstrap (`DOCS_BOOTSTRAP_GOALS`, template
+revision 2): `make stand` and `make mutants` read no pin and need no network, and a new target that
+leads to `docs-gate` goes into that list.
+
+The anchors point into petich, konekt, booblik and kompot by path, and the weekly anchors job clones
+those four beside this checkout (`REPOS=repos`) so that they are checked against each one's current
+`main` — a refactor there is what that job exists to notice. Since docs-bootstrap 0.3.4 a path counts
+only in the repository its first segment names, so a local `make report` without those clones under
+`REPOS` reports them missing rather than finding a file of the same name in this one.
 
 After editing a backlog item run `make fix` and commit both files.
 

@@ -59,7 +59,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - uses: youndie/docs-bootstrap@v0.3.0
+      - uses: youndie/docs-bootstrap@v0.3.5
 
   # The handover stand, in a job of its own because it is the one check `make check` deliberately
   # leaves out: it needs a working docker and the better part of a minute, and a contributor editing
@@ -150,6 +150,6 @@ jobs:
 
       # `repos/` holds the four clones and a link to this checkout, so REPOS points there instead
       # of at `..`.
-      - uses: youndie/docs-bootstrap@v0.3.0
+      - uses: youndie/docs-bootstrap@v0.3.5
         with:
           target: report REPOS=repos
