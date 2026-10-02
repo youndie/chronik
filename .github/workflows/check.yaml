@@ -128,11 +128,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # THE ANCHORS OF THIS REPOSITORY POINT AT FOUR OTHERS, which is why REPOS is not the default
-      # `..` here. The research verifies its facts against petich, konekt, booblik and kompot and
-      # cites them by path; a path is only checkable where the file is, so those four have to be on
-      # disk. All four are public, so `secrets.GITHUB_TOKEN` — scoped to this repository — reaches them. A private
-      # one would take the warning branch below every week without ever saying why.
+      # THE ANCHORS OF THIS REPOSITORY POINT AT FIVE OTHERS, which is why REPOS is not the default
+      # `..` here. The research verifies its facts against petich, konekt, booblik and kompot, and
+      # the sqlx4k service document cites xyk's database setup; a path is only checkable where the
+      # file is, so those five have to be on disk. All five are public, so `secrets.GITHUB_TOKEN` —
+      # scoped to this repository — reaches them. A private one would take the warning branch below
+      # every week without ever saying why.
       #
       # A repository that cannot be cloned is a warning rather than a failure: its anchors are
       # simply unchecked, and a red weekly build nobody caused is a build people learn to ignore.
@@ -140,7 +141,7 @@ jobs:
           mkdir -p repos
           ln -s "$GITHUB_WORKSPACE" repos/chronik
           cd repos
-          for r in petich konekt booblik kompot; do
+          for r in petich konekt booblik kompot xyk; do
             git clone --depth 1 --filter=blob:none \
               "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository_owner }}/$r.git" \
               || echo "::warning::$r is unreachable - its anchors were not checked"
@@ -148,7 +149,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # `repos/` holds the four clones and a link to this checkout, so REPOS points there instead
+      # `repos/` holds the five clones and a link to this checkout, so REPOS points there instead
       # of at `..`.
       - uses: youndie/docs-bootstrap@v0.3.5
         with:
