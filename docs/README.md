@@ -84,7 +84,9 @@ make check
 недостающие строки карты покрытия. Проверки документов — из
 [docs-bootstrap](https://github.com/youndie/docs-bootstrap), той версии, которую закрепляет строка
 `uses: youndie/docs-bootstrap@…` в `.github/workflows/check.yaml`; первый запуск скачивает её в
-`.docs-bootstrap/`. Копий скриптов в `scripts/` больше нет.
+`.docs-bootstrap/`. Копий скриптов в `scripts/` больше нет. Проверки подключаются только для
+`check`, `gate`, `report`, `fix` и целей `docs-` (`DOCS_BOOTSTRAP_GOALS`): `make stand` и
+`make mutants` пин не читают и сети не требуют.
 
 ## Карта покрытия
 
