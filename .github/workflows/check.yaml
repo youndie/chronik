@@ -59,7 +59,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - uses: youndie/docs-bootstrap@v0.3.8
+      - uses: youndie/docs-bootstrap@v0.3.11
 
   # The handover stand, in a job of its own because it is the one check `make check` deliberately
   # leaves out: it needs a working docker and the better part of a minute, and a contributor editing
@@ -105,7 +105,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.14"
 
       - uses: actions/setup-java@v4
         with:
@@ -135,6 +135,6 @@ jobs:
       # (SPEC 4.1), which the report holds to their form without fetching them, so no clones go
       # beside it: a row about what konekt was on 2026-09-04 is about that commit, and resolving it
       # against konekt's main today would vouch for a sentence nobody re-read.
-      - uses: youndie/docs-bootstrap@v0.3.8
+      - uses: youndie/docs-bootstrap@v0.3.11
         with:
           target: report
