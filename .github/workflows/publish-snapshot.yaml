@@ -14,14 +14,14 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v5
 
-      - uses: youndie/sborka/.github/actions/setup-kotlin@v0.5.0.130
+      - uses: youndie/sborka/.github/actions/setup-kotlin@v0.5.0.133
 
       # The head of the version from gradle.properties with the run number on the tail: two
       # publishes in a row must not produce the same artefact, or a consumer cannot tell them apart
       # and keeps the cached older one.
       - name: Determine version
         id: ver
-        uses: youndie/sborka/.github/actions/determine-version@v0.5.0.130
+        uses: youndie/sborka/.github/actions/determine-version@v0.5.0.133
 
       # `build` before `publish`, and not only to be tidy: `build` runs the Postgres tests, and a
       # snapshot that fails its own conformance corpus is one a consumer would take and trust.
