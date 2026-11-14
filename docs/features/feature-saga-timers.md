@@ -84,7 +84,7 @@ tags: [integration]
   записывает `index + 1`, и уснувший шаг пробуждения не видит
 * **And:** механизм возобновления тот же, что у обычного «later request»
 * **And:** возобновление несёт `TimerFired`, иначе движок не отличит его от первого входа
-* **Automated:** `SagaTimerSinkTest` (в репозитории движка, ветка `feat/chronik-bridge`)
+* **Automated:** `petich SagaTimerSinkTest` (ветка `feat/chronik-bridge`)
 
 ### Scenario: откат отменяет таймеры саги
 
